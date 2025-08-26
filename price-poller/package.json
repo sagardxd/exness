@@ -1,0 +1,21 @@
+{
+  "name": "price-poller",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/ws": "^8.18.1",
+    "redis": "^5.8.2",
+    "typescript": "^5.9.2",
+    "websocket": "^1.0.35",
+    "ws": "^8.18.3"
+  }
+}
