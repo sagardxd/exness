@@ -1,44 +1,44 @@
 import WebSocket from "ws";
+import { publishDataToRedis } from "./redis/publish.js";
+import { produceQueue } from "./queue/producer.js";
+import dotenv from "dotenv"
+import type { TradeData } from "./types/trade-data.types.js";
+import { logger } from "./utils/logger.js";
 import { createClient } from "redis";
-import { isJSDocCallbackTag } from "typescript";
+dotenv.config()
 
-// Redis clients
-const publisher = createClient({ url: "redis://localhost:6379" });
-const subscriber = createClient({ url: "redis://localhost:6379" });
-const queue = createClient({ url: "redis://localhost:6379" })
+const binanceWSURL = process.env.BINANCE_WS_URL || "";
+const redisURL = process.env.REDIS_URL || "";
+
+const redisClient = createClient({ url: redisURL });
+
+redisClient.on("error", (err) => console.error("Redis Client Error", err));
+
+await redisClient.connect();
+console.log("✅ Redis client connected");
 
 async function main() {
-    const CHUNK_SIZE = 20;
-    let count = 0;
-
-    await publisher.connect();
-    await subscriber.connect();
-    await queue.connect()
-
-    await subscriber.subscribe("BTC", (msg) => {
-        // console.log("📩 Data from sub:", msg);
-    });
-
-    // 3. Connect to Binance WebSocket
-    const binanceWS = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@trade");
-
+    const binanceWS = new WebSocket(binanceWSURL);
+    let counter = 0;
 
     binanceWS.on("message", async (msg) => {
-        const data = JSON.parse(msg.toString());
-        const final_data = JSON.stringify(data)
-        // await publisher.publish("BTC",  final_data);
-        await queue.rPush("queue", final_data)
-        console.log('data:', data)
-
-        count++;
-
-        console.log(count)
-
-        if (count === CHUNK_SIZE) {
-            count = 0;
-            console.log('chunk added')
-            // const candles = await db.getCandles('BTCUSDT', '1m', 50);
-            // console.log('candles', candles)
+        console.log(counter)
+        try {
+            const parsed = JSON.parse(msg.toString());
+            const final_data: TradeData = {
+                s: parsed.s,
+                p: parsed.p,
+                T: parsed.T
+            };
+            await publishDataToRedis(final_data, redisClient)
+            await produceQueue(final_data, redisClient)
+            counter++;
+            if (counter === 30) {
+                console.log('one batch should be polled from the trade backend')
+                counter = 0;
+            }
+        } catch (error) {
+            logger("main", "error processing messsage from binance ws", error)
         }
     });
 
