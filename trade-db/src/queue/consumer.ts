@@ -2,7 +2,7 @@ import type TradesDB from "../db/time-scale-db.js";
 import type { TradeData } from "../types/time-scale.types.js";
 import { redisClient } from "./redis-client.js";
 
-export const getDataFromQueue = async (db:TradesDB) => {
+export const getDataFromQueue = async (db: TradesDB) => {
     redisClient.connect();
 
     console.log("Listening to Redis queue...");
@@ -14,6 +14,7 @@ export const getDataFromQueue = async (db:TradesDB) => {
         try {
             const rawData = await redisClient.lPop("queue");
 
+
             if (rawData) {
                 count++;
                 const data: TradeData = JSON.parse(rawData)
@@ -21,8 +22,8 @@ export const getDataFromQueue = async (db:TradesDB) => {
 
                 if (count === CHUNK_SIZE) {
                     await db.insert(chunk)
-                    db.insert(chunk)
                     count = 0;
+                    chunk = []
                 }
 
             } else {
