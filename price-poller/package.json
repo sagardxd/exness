@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run src/index.ts",
-    "db:setup": "bun run src/utils/setup-timescale.ts"
+    "dev": "bun run src/index.ts"
   },
   "keywords": [],
   "author": "",
