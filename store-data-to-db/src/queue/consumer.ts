@@ -18,7 +18,7 @@ export const getDataFromQueue = async (db: TradesDB) => {
             if (rawData) {
                 count++;
                 const data: TradeData = JSON.parse(rawData)
-                chunk.push({ p: data.p, s: data.s, T: data.T })
+                chunk.push({ p: data.p, s: data.s, T: data.T, m: data.m })
 
                 if (count === CHUNK_SIZE) {
                     await db.insert(chunk)

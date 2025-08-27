@@ -2,6 +2,7 @@ export interface    TradeData {
     s: string; // symbol like "BTCUSDT"
     p: string; // price as string
     T: string; // timestamp in ms
+    m: boolean; // true == sell, false == buy
 }
 
 export interface Trade {
@@ -17,5 +18,5 @@ export interface Candle {
     high: number;
     low: number;
     close: number;
-    volume: number;
+    sell: number;
 }

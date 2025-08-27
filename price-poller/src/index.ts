@@ -28,7 +28,8 @@ async function main() {
             const final_data: TradeData = {
                 s: parsed.s,
                 p: parsed.p,
-                T: parsed.T
+                T: parsed.T,
+                m: parsed.m
             };
             await publishDataToRedis(final_data, redisClient)
             await produceQueue(final_data, redisClient)

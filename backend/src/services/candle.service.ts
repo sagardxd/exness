@@ -1,5 +1,5 @@
 import { error } from "console";
-import { db } from "../index.js"
+import { db } from "../index.js";
 
 
 export const getCandleService = async (token: string, interval: string) => {

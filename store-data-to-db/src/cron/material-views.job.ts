@@ -12,17 +12,17 @@ export const startCronJobs = () => {
   });
 
   cron.schedule("*/10 * * * *", async() => {
-    await db.refresh("5m").catch((err) => console.error(err));
+    await db.refresh("10m").catch((err) => console.error(err));
   });
 
   cron.schedule("*/15 * * * *", async() => {
-    await db.refresh("5m").catch((err) => console.error(err));
+    await db.refresh("15m").catch((err) => console.error(err));
   });
 
   cron.schedule("*/30 * * * *", async() => {
-    await db.refresh("5m").catch((err) => console.error(err));
+    await db.refresh("30m").catch((err) => console.error(err));
   });
 
 
-  console.log("Cron jobs started...");
+  console.log("Cron jobs started..."); 
 };

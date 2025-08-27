@@ -1,0 +1,19 @@
+{
+  "name": "all-assets-ask-bid",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/ws": "^8.18.1",
+    "redis": "^5.8.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "ws": "^8.18.3"
+  }
+}

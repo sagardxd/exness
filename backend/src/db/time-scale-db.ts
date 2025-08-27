@@ -1,5 +1,5 @@
-import pkg from 'pg'
-import type { Candle, Trade, TradeData } from '../types/time-scale.types.js';
+import pkg from '../../node_modules/@types/pg/index.js'
+import type { Candle } from '../types/time-scale.types.js';
 const { Client } = pkg;
 
 class TradesDB {
@@ -25,34 +25,6 @@ class TradesDB {
         }
     }
 
-    // Insert trades - NO refresh
-    async insert(tradesData: TradeData[]): Promise<void> {
-        await this.connect();
-        try {
-            const trades: Trade[] = tradesData.map(t => ({
-                token: t.s,
-                price: parseFloat(t.p),
-                timestamp: new Date(t.T)
-            }));
-
-            const values = trades
-                .map((_, i) => `($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`)
-                .join(', ');
-
-            const params = trades.flatMap(t => [t.token, t.price, t.timestamp]);
-
-            await this.client.query(
-                `INSERT INTO trades (token, price, timestamp) VALUES ${values}`,
-                params
-            );
-
-            console.log(`✅ Inserted ${trades.length} trades`);
-        } catch (err) {
-            console.error('❌ Failed to insert trades:', err);
-            throw err;
-        }
-    }
-
     // Get candles from materialized views
     async getCandles(token: string, interval: string, limit = 100): Promise<Candle[]> {
         await this.connect();
@@ -66,18 +38,6 @@ class TradesDB {
             return result.rows;
         } catch (err) {
             console.error('❌ Failed to get candles:', err);
-            throw err;
-        }
-    }
-
-    // Refresh views manually
-    async refresh(interval: string): Promise<void> {
-        await this.connect();
-        try {
-            await this.client.query(`REFRESH MATERIALIZED VIEW candles_${interval}`);
-            console.log(`🔄 Refreshed view candles_${interval}`);
-        } catch (err) {
-            console.error('❌ Failed to refresh materialized views:', err);
             throw err;
         }
     }

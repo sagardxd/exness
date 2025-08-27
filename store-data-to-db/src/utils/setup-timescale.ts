@@ -1,4 +1,4 @@
-import pkg from 'pg';
+import pkg from '../../node_modules/@types/pg/index.js';
 const { Client } = pkg;
 
 // PostgreSQL client configuration
@@ -47,7 +47,8 @@ async function setupTimescale() {
     const intervals = [1, 5, 10, 15, 30];
     for (const i of intervals) {
       await client.query(`
-        CREATE MATERIALIZED VIEW candles_${i}m AS
+        CREATE MATERIALIZED VIEW candles_${i}m 
+        WITH (timescaledb.continuous) AS 
         SELECT
           token,
           time_bucket('${i} minutes', timestamp) AS candle_start,
@@ -66,6 +67,11 @@ async function setupTimescale() {
       await client.query(`
         CREATE INDEX idx_candles_${i}m_token_time ON candles_${i}m (token, candle_start DESC);
       `);
+
+      await client.query(`SELECT add_continuous_aggregate_policy('candles_${i}m',
+      start_offset => INTERVAL '1 day',
+      end_offset => INTERVAL '${i} minutes',
+      schedule_interval => INTERVAL '${i} minutes');`);
 
       console.log(`Created candles_${i}m view and index`);
     }
