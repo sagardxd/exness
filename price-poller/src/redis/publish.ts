@@ -1,10 +1,6 @@
-import { createClient } from "redis";
 import type { TradeData } from "../types/trade-data.types.js";
 import { logger } from "../utils/logger.js";
-import dotenv from "dotenv"
-dotenv.config()
 
-const redisURL = process.env.REDIS_URL || ""
 
 export const publishDataToRedis = async (data: TradeData, redisClient: any) => {
     try {
