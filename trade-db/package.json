@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run src/index.ts",
+    "dev:watch": "nodemon --watch src --ext ts,js --exec 'bun run src/index.ts'",
     "db:setup": "bun run src/utils/setup-timescale.ts"
   },
   "keywords": [],
@@ -13,12 +14,16 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@types/express": "^5.0.3",
     "@types/pg": "^8.15.5",
     "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "node-cron": "^4.2.1",
     "pg": "^8.16.3",
     "redis": "^5.8.2"
   }

@@ -71,14 +71,11 @@ class TradesDB {
     }
 
     // Refresh views manually
-    async refresh(): Promise<void> {
+    async refresh(interval: string): Promise<void> {
         await this.connect();
         try {
-            const intervals = ['1m', '5m', '10m', '15m', '30m'];
-            for (const interval of intervals) {
-                await this.client.query(`REFRESH MATERIALIZED VIEW candles_${interval}`);
-                console.log(`🔄 Refreshed view candles_${interval}`);
-            }
+            await this.client.query(`REFRESH MATERIALIZED VIEW candles_${interval}`);
+            console.log(`🔄 Refreshed view candles_${interval}`);
         } catch (err) {
             console.error('❌ Failed to refresh materialized views:', err);
             throw err;
