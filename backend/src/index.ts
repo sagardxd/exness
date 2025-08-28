@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors'
 import candleRouter from './routes/candle.router.js'
 import TradesDB from './db/time-scale-db.js';
 import dotenv from 'dotenv';
@@ -6,6 +7,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors())
 
 // getting data from the queue and inserting in timescale DB
 const timescaleDbURL = process.env.TIMESCALE_DB_URL || ""
