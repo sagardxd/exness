@@ -34,8 +34,6 @@ export const getDataFromQueue = async (db: TradesDB) => {
             }
         } catch (err) {
             console.error("Redis error:", err);
-            // Optional: reconnect logic
-            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
     }
 };

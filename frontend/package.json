@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "install": "^0.13.0",
     "lightweight-charts": "^5.0.8",
     "next": "15.5.2",
+    "npm": "^11.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-financial-charts": "^2.0.1"

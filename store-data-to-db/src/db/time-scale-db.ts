@@ -1,5 +1,5 @@
 import pkg from 'pg'
-import type { Candle, Trade, TradeData } from '../types/time-scale.types.js';
+import type { Candle, Trade, TradeData } from '../types/time-scale.types.ts';
 const { Client } = pkg;
 
 class TradesDB {

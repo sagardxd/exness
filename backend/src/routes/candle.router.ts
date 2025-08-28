@@ -3,9 +3,6 @@ import * as CandleController from "../controllers/candle.controller.js"
 
 const router = Router();
 
-router.get("/:token", (req, res, next) => {
-    console.log("HIT /candles/:token", req.params, req.query);
-    next();
-}, CandleController.getCandleController);
+router.get("/:token", CandleController.getCandleController )
 
 export default router

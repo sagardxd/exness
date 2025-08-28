@@ -76,7 +76,7 @@ async function setupTimescale() {
       schedule_interval => INTERVAL '${i} minutes');`);
 
       console.log(`Created candles_${i}m view and index`);
-    }
+    }         
 
     console.log('✅ TimescaleDB setup completed successfully!');
 
