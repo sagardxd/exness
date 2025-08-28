@@ -33,7 +33,7 @@ async function main() {
                 q: parsed.q
             };
             await publishDataToRedis(final_data, redisClient)
-            await produceQueue(final_data, redisClient)
+            // await produceQueue(final_data, redisClient)
             counter++;
             if (counter === 30) {
                 console.log('one batch should be polled from the trade backend')
