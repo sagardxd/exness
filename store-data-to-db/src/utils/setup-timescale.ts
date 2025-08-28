@@ -1,4 +1,4 @@
-import pkg from '../../node_modules/@types/pg/index.js';
+import pkg from 'pg';
 const { Client } = pkg;
 
 // PostgreSQL client configuration

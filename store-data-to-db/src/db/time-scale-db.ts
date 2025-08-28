@@ -1,4 +1,4 @@
-import pkg from '../../node_modules/@types/pg/index.js'
+import pkg from 'pg'
 import type { Candle, Trade, TradeData } from '../types/time-scale.types.js';
 const { Client } = pkg;
 

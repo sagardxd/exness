@@ -4,7 +4,7 @@ import { logger } from "../utils/logger.js";
 
 export const publishDataToRedis = async (data: TradeData, redisClient: any) => {
     try {
-        await redisClient.publish("BTC", JSON.stringify(data));
+        await redisClient.publish("ASSETS", JSON.stringify(data));
     } catch (error) {
         logger("publishDataToRedis", "Error publishing data to redis", error)
     }
