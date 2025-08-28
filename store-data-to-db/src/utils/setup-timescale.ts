@@ -18,6 +18,7 @@ async function setupTimescale() {
         id BIGSERIAL,
         token VARCHAR(20) NOT NULL,
         price DECIMAL(20,8) NOT NULL,
+        volume DECIMAL(20,8) NOT NULL,
         timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         PRIMARY KEY (timestamp, token, id)
       );
@@ -57,6 +58,7 @@ async function setupTimescale() {
           MAX(price) AS high,
           MIN(price) AS low,
           LAST(price, timestamp) AS close,
+          SUM(volume) AS volume,
           COUNT(*) AS trade_count
         FROM trades
         GROUP BY token, time_bucket('${i} minutes', timestamp)

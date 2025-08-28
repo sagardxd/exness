@@ -22,14 +22,15 @@ async function main() {
     let counter = 0;
 
     binanceWS.on("message", async (msg) => {
-        console.log(counter)
         try {
             const parsed = JSON.parse(msg.toString());
+            console.log(parsed)
             const final_data: TradeData = {
                 s: parsed.s,
                 p: parsed.p,
                 T: parsed.T,
-                m: parsed.m
+                m: parsed.m,
+                q: parsed.q
             };
             await publishDataToRedis(final_data, redisClient)
             await produceQueue(final_data, redisClient)

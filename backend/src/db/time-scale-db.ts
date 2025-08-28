@@ -1,5 +1,5 @@
-import pkg from '../../node_modules/@types/pg/index.js'
-import type { Candle } from '../types/time-scale.types.js';
+import pkg from 'pg'
+import type { Candle } from '../types/time-scale.types.ts';
 const { Client } = pkg;
 
 class TradesDB {

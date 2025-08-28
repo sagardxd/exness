@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import express from 'express'
 import TradesDB from './db/time-scale-db.js';
 import { getDataFromQueue } from './queue/consumer.js';
-import { startCronJobs } from './cron/material-views.job.js';
 dotenv.config();
 
 const app = express();
