@@ -5,3 +5,20 @@ export interface TradeData {
     m: boolean // true == sell, false == buy
     q: string // quantity
 }
+
+export interface WSTradeData {
+    symbol: Symbol
+    buyPrice: number
+    sellPrice: number
+    decimals: number
+}
+
+export enum Symbol {
+    BTCUSDT = "BTC",
+    ETHUSDT = "ETH",
+    SOLUSDT = "SOL"
+}
+
+export interface WSResponse {
+    price_updates: WSTradeData | null
+}

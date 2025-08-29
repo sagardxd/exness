@@ -10,7 +10,12 @@ interface CandleApiResponse {
     data: CandlestickData[]
 }
 
-const CandleChart: React.FC = () => {
+interface CandleChartProps {
+    symbol: string;
+    interval: string;
+}
+
+const CandleChart: React.FC<CandleChartProps> = ({ symbol, interval }) => {
     const chartContainerRef = useRef<HTMLDivElement>(null);
     const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
     const [candleData, setCandleData] = useState<CandlestickData[]>([]);
@@ -28,7 +33,6 @@ const CandleChart: React.FC = () => {
         const fetchAndUpdateData = async () => {
             const result: CandleApiResponse = await fetchCandleData();
             if (result && result.data && result.data.length > 0) {
-                console.log('data', result.data);
                 setCandleData(result.data);
             }
         };
@@ -36,12 +40,15 @@ const CandleChart: React.FC = () => {
         // Initial fetch
         fetchAndUpdateData();
 
-    }, [isClient]);
+    }, [isClient, symbol, interval]);
 
     const fetchCandleData = async (): Promise<CandleApiResponse> => {
         try {
-            const response = await fetch(`${API_URL}/candles/ETHUSDT?interval=1m`);
+            console.log(`${API_URL}/candles/${symbol}USDT?interval=${interval}`)
+            const response = await fetch(`${API_URL}/candles/${symbol}USDT?interval=${interval}`);
             const json = await response.json();
+
+            console.log('json', json.data.data)
             
             // Validate and transform the data
             const validatedData = json.data.data.map((candle: any) => ({
@@ -83,21 +90,21 @@ const CandleChart: React.FC = () => {
             width: chartContainerRef.current.clientWidth,
             height: 400,
             layout: {
-                background: { type: ColorType.Solid, color: "#282828" },
-                textColor: "#ffffff",
+                background: { type: ColorType.Solid, color: "#0f1621" },
+                textColor: "#c7d1da",
             },
             grid: {
-                vertLines: { color: "#403f3f" },
-                horzLines: { color: "#403f3f" },
+                vertLines: { color: "#1a2430" },
+                horzLines: { color: "#1a2430" },
             },
         });
 
         const candlestickSeries = chart.addSeries(CandlestickSeries,{
-            upColor: "#26a69a",
-            downColor: "#ef5350",
+            upColor: "#2fbf71",
+            downColor: "#e35d6a",
             borderVisible: false,
-            wickUpColor: "#26a69a",
-            wickDownColor: "#ef5350",
+            wickUpColor: "#2fbf71",
+            wickDownColor: "#e35d6a",
         });
 
         // Store the series reference
@@ -137,11 +144,11 @@ const CandleChart: React.FC = () => {
                     style={{ 
                         width: "100%", 
                         height: "400px", 
-                        backgroundColor: "#282828", 
+                        backgroundColor: "#0f1621", 
                         display: "flex", 
                         alignItems: "center", 
                         justifyContent: "center",
-                        color: "#ffffff"
+                        color: "#c7d1da"
                     }}
                 >
                     Loading chart...
@@ -159,11 +166,11 @@ export default dynamic(() => Promise.resolve(CandleChart), {
             style={{ 
                 width: "100%", 
                 height: "400px", 
-                backgroundColor: "#282828", 
+                backgroundColor: "#0f1621", 
                 display: "flex", 
                 alignItems: "center", 
                 justifyContent: "center",
-                color: "#ffffff"
+                color: "#c7d1da"
             }}
         >
             Loading chart...
