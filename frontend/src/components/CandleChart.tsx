@@ -158,22 +158,4 @@ const CandleChart: React.FC<CandleChartProps> = ({ symbol, interval }) => {
     );
 };
 
-// Export with dynamic import to disable SSR
-export default dynamic(() => Promise.resolve(CandleChart), {
-    ssr: false,
-    loading: () => (
-        <div 
-            style={{ 
-                width: "100%", 
-                height: "400px", 
-                backgroundColor: "#0f1621", 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center",
-                color: "#c7d1da"
-            }}
-        >
-            Loading chart...
-        </div>
-    )
-});
+export default CandleChart
