@@ -19,7 +19,7 @@ const FlashPrice: React.FC<FlashPriceProps> = ({ value, format, className }) => 
 
     const previous = previousValueRef.current
     if (value > previous) {
-      setFlashClass("flash-up")
+      setFlashClass("flash-up ")
     } else if (value < previous) {
       setFlashClass("flash-down")
     }
@@ -31,9 +31,9 @@ const FlashPrice: React.FC<FlashPriceProps> = ({ value, format, className }) => 
   }, [value])
 
   return (
-    <span className={`${flashClass} rounded-sm py-2 ${className ?? ""}`}>
+    <div className={`${flashClass} rounded-sm py-2  full ${className ?? ""}`}>
       {format(value)}
-    </span>
+    </div>
   )
 }
 

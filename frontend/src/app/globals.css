@@ -24,3 +24,22 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Price flash animations */
+@keyframes flash-down {
+  0% { background-color: rgba(239, 68, 68, 0.9); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flash-up {
+  0% { background-color: rgba(16, 185, 129, 0.9); }
+  100% { background-color: transparent; }
+}
+
+.flash-down {
+  animation: flash-down 1s ease-out;
+}
+
+.flash-up {
+  animation: flash-up 1s ease-out;
+}

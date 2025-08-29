@@ -16,13 +16,15 @@ export const getDataFromQueue = async (db: TradesDB) => {
 
 
             if (rawData) {
-                console.log('count: ', count)
                 count++;
                 const data: TradeData = JSON.parse(rawData)
                 chunk.push({ p: data.p, s: data.s, T: data.T, m: data.m, q: data.q })
 
                 if (count === CHUNK_SIZE) {
-                    console.log(chunk[0])
+
+                    const length = await redisClient.lLen('queue'); 
+                    console.log(`Queue length:`, length);
+
                     await db.insert(chunk)
                     count = 0;
                     chunk = []

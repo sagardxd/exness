@@ -119,14 +119,7 @@ async function handleWebSocketMessage(message: WebSocket.Data) {
 
         // Create trade data for queue
         const tradeData = createTradeData(parsed);
-        await produceQueue(tradeData, redisClient);
-
-        // Handle batch counter
-        messageCounter++;
-        if (messageCounter >= BATCH_SIZE) {
-            messageCounter = 0;
-        }
-
+        // await produceQueue(tradeData, redisClient);
     } catch (error) {
         logger("handleWebSocketMessage", "Error processing message from Binance WS", error);
     }

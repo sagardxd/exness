@@ -32,22 +32,22 @@ const PricesList: React.FC<PricesListProps> = ({ assets, makeFormatter, onSelect
           return (
             <button
               key={asset.symbol || index}
-              className={`grid grid-cols-3 w-full text-sm py-3 rounded bg-[#0f1621] border transition-colors 
+              className={`grid grid-cols-3 w-full text-sm py-3  rounded bg-[#0f1621] border transition-colors 
                 ${isSelected ? "border-[#2a3a4d]" : "border-transparent hover:border-[#1f2a37]"}`}
               onClick={() => onSelectSymbol && onSelectSymbol(asset.symbol)}
             >
               {/* Asset */}
-              <div className="font-medium text-[#8ab4f8] tracking-wide text-left">
+              <div className="font-medium text-[#8ab4f8] flex items-center  text-left">
                 {String(asset.symbol).replace("USDT", "")}
               </div>
 
               {/* Ask */}
-              <div className="text-rose-400 text-left">
+              <div className="text-rose-400 text-left mx-1">
                 <FlashPrice value={asset.sellPrice} format={makeFormatter(asset.decimals)} />
               </div>
 
               {/* Bid */}
-              <div className="text-emerald-400 text-left">
+              <div className="text-emerald-400 text-left mx-1">
                 <FlashPrice value={asset.buyPrice} format={makeFormatter(asset.decimals)} />
               </div>
             </button>
