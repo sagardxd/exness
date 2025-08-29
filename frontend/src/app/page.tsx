@@ -1,9 +1,9 @@
 "use client"
 import CandleChart from '@/components/CandleChart'
-import FlashPrice from '@/components/FlashPrice'
 import Header from '@/components/Header'
 import PricesList from '@/components/PricesList'
-import { Symbol, WSResponse, WSTradeData } from '@/types/ws-stream.types'
+import TradeForm from '@/components/TradeForm'
+import { Symbol, WSTradeData } from '@/types/ws-stream.types'
 import React, { useEffect, useMemo, useState } from 'react'
 
 const Home = () => {
@@ -11,6 +11,7 @@ const Home = () => {
   const [selectedSymbol, setSelectedSymbol] = useState<Symbol>(Symbol.BTCUSDT);
   const [selectedInterval, setSelectedInterval] = useState<string>("1m");
   const [isClient, setIsClient] = useState(false);
+  const [balance, setBalance] = useState(5000)
 
   // Helper function to format price based on decimals
   const formatPrice = (price: number, decimals: number) => {
@@ -141,47 +142,12 @@ const Home = () => {
         </div>
 
         {/* Right Section: Buy/Sell Buttons */}
-        <div className='w-1/5 p-4  flex flex-col items-center justify-center space-y-4 border-b-4  border-[#162230]'>
-          <h2 className='text-lg font-semibold mb-2 text-gray-300 tracking-wide'>Trade</h2>
-
-          {assets.length > 0 && (
-            <div className='w-full mb-2 p-3 rounded-lg bg-[#0f1621] border border-[#161f2a]'>
-              <div className='flex items-center justify-between mb-2'>
-                <div className='text-xs text-gray-400'>Selected: {selectedSymbol}</div>
-                <div className='flex gap-8 text-[10px] uppercase tracking-wider text-gray-400'>
-                  <span>Ask</span>
-                  <span>Bid</span>
-                </div>
-              </div>
-              {(() => {
-                const selectedAsset = assets.find(asset => asset?.symbol === selectedSymbol);
-                if (selectedAsset) {
-                  return (
-                    <div className='flex'>
-                      <div />
-                      <div className='flex gap-4'>
-                        <span className='text-rose-400 text-sm'>
-                          <FlashPrice value={selectedAsset.sellPrice} format={makeFormatter(selectedAsset.decimals)} />
-                        </span>
-                        <span className='text-emerald-400 text-sm'>
-                          <FlashPrice value={selectedAsset.buyPrice} format={makeFormatter(selectedAsset.decimals)} />
-                        </span>
-                      </div>
-                    </div>
-                  );
-                }
-                return <div className='text-gray-500 text-sm text-center'>No data available</div>;
-              })()}
-            </div>
-          )}
-
-          <button className='w-full py-3 rounded-md font-semibold transition-colors duration-200 bg-emerald-600 text-white hover:bg-emerald-500'>
-            Buy
-          </button>
-          <button className='w-full py-3 rounded-md font-semibold transition-colors duration-200 bg-rose-600 text-white hover:bg-rose-500'>
-            Sell
-          </button>
-        </div>
+        <TradeForm
+              asset={selectedSymbol}      
+              balance={balance}
+              buyprice={1212}
+              sellprice={1212}
+        />
       </div>
 
     </div>
