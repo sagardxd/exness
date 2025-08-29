@@ -37,7 +37,7 @@ const PricesList: React.FC<PricesListProps> = ({ assets, makeFormatter, onSelect
               onClick={() => onSelectSymbol && onSelectSymbol(asset.symbol)}
             >
               {/* Asset */}
-              <div className="font-medium text-[#8ab4f8] flex items-center  text-left">
+              <div className="font-medium text-[#8ab4f8] flex items-center pl-2 text-left">
                 {String(asset.symbol).replace("USDT", "")}
               </div>
 
