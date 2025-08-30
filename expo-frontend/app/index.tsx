@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import CandlestickChart from './components/CandlestickChart';
 import LivePrice from './components/LivePrice';
+import OrderHistory from './components/OrderHistory';
+import Trade from './components/Trade';
+import { ThemeColor } from './theme/theme-color';
 import { Symbol, WSTradeData } from './types/live-price.types';
 
 export default function Index() {
+  const styles = homeStyles;
   const [assets, setAssets] = useState<WSTradeData[]>([]);
   const [isClient, setIsClient] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
   const [selectedAsset, setSelectedAsset] = useState<Symbol>(Symbol.BTCUSDT);
-
+  const [selectedAssetData, setSelectedAssetData] = useState<WSTradeData | null>(null);
 
   useEffect(() => {
-    setIsClient(true)
+    setIsClient(true);
+    setSelectedAsset(Symbol.BTCUSDT)
   }, []);
 
   useEffect(() => {
@@ -36,13 +42,13 @@ export default function Index() {
 
         // Extract the trade data from the response
         const newTradeData: WSTradeData = response.price_updates;
-        
+
         // Validate the data before updating
         if (newTradeData && newTradeData.symbol) {
           setAssets(prevAssets => {
             // Filter out any undefined items from previous state
             const validPrevAssets = prevAssets.filter(item => item && item.symbol);
-            
+
             const existingIndex = validPrevAssets.findIndex(
               trade => trade.symbol === newTradeData.symbol
             );
@@ -82,12 +88,36 @@ export default function Index() {
     };
   }, [isClient]);
 
+  useEffect(() => {
+    if (!assets) return;
+    const data = assets.find((asset) => asset.symbol == selectedAsset);
+    if (data) 
+      setSelectedAssetData(data)
+  }, [selectedAsset, assets])
+    ;
+
   return (
-    <View style={{ flex: 1, backgroundColor: '#000' }}>
+    <View style={styles.container}>
       <SafeAreaView />
-      <LivePrice data={assets} />
-      {/* <CandlestickChart symbol="SOLUSDT" interval="1m" /> */}
-      {/* <LiveCandlestickChart/> */}
+      <View>
+        <LivePrice data={assets} setSelectedAsset={setSelectedAsset} selectedAsset={selectedAsset} />
+        <CandlestickChart symbol={selectedAsset} interval="1m" />
+      </View>
+      <View style={styles.bottomContainer}>
+        <OrderHistory />
+        <Trade selectedAsset={selectedAsset} data={selectedAssetData} />
+      </View>
     </View>
   );
 }
+
+const homeStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: ThemeColor.background
+  },
+  bottomContainer: {
+    flex: 1,
+    justifyContent: 'space-between'
+  }
+})

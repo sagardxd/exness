@@ -1,13 +1,15 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { WSTradeData } from '../types/live-price.types';
+import { Symbol, WSTradeData } from '../types/live-price.types';
 import AssetPrice from './AssetPrice';
 
 interface LivePriceProps {
     data: WSTradeData[] | null
+    setSelectedAsset: (asset: Symbol) => void
+    selectedAsset: Symbol
 }
 
-const LivePrice: React.FC<LivePriceProps> = ({ data }) => {
+const LivePrice: React.FC<LivePriceProps> = ({ data, setSelectedAsset, selectedAsset }) => {
     const symbols = ["BTCUSDT", "SOLUSDT", "ETHUSDT"];
 
     const getPriceForSymbol = (symbol: string): WSTradeData | null => {
@@ -19,8 +21,22 @@ const LivePrice: React.FC<LivePriceProps> = ({ data }) => {
         <ScrollView horizontal contentContainerStyle={styles.container}>
                 {symbols.map((symbol) => {
                     const priceData = getPriceForSymbol(symbol);
+                    const isSelected = selectedAsset === symbol;
                     
-                    return <AssetPrice key={priceData?.symbol} priceData={priceData} />
+                    // Create a mock priceData object for loading state
+                    const assetData = priceData || {
+                        symbol: symbol as Symbol,
+                        buyPrice: 0,
+                        sellPrice: 0,
+                        decimals: 3
+                    };
+                    
+                    return <AssetPrice 
+                        key={symbol} 
+                        priceData={assetData} 
+                        setSelectedAsset={setSelectedAsset}
+                        isSelected={isSelected}
+                    />
                 })}
         </ScrollView>
     );
@@ -28,14 +44,8 @@ const LivePrice: React.FC<LivePriceProps> = ({ data }) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        backgroundColor: '#1a1a1a',
+        padding: 10,
         gap: 10
-    },
-    title: {
-        color: 'white',
-        marginBottom: 20,
-        textAlign: 'center',
     },
 });
 

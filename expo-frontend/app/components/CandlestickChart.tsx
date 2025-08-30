@@ -14,7 +14,6 @@ import { calculatePriceRange, priceToY } from '../utils/chartUtils';
 import { ChartGrid } from './ChartGrid';
 import { ChartHeader } from './ChartHeader';
 import { ErrorState } from './ErrorState';
-import { InfoPanel } from './InfoPanel';
 import { LoadingSpinner } from './LoadingSpinner';
 import { PriceLabels } from './PriceLabels';
 
@@ -74,10 +73,6 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
         translateX.value = initialPosition;
       } else {
         setError('Failed to fetch data from API');
-        const demoData = generateCandleData(50);
-        setData(demoData);
-        const initialPosition = calculateInitialPosition(demoData.length);
-        translateX.value = initialPosition;
       }
       setLoading(false);
     };
@@ -209,7 +204,7 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ }}>
       <View style={{ 
         width, 
         height, 
@@ -249,7 +244,7 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
             <Animated.View 
               style={[
                 {
-                  width: data.length * totalCandleWidth,
+                  width: data.length * totalCandleWidth,  
                   height: chartHeight,
                 },
                 animatedStyle
@@ -267,7 +262,7 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
           </GestureDetector>
         </View>
         
-        <InfoPanel data={data} />
+        {/* <InfoPanel data={data} /> */}
       </View>
     </GestureHandlerRootView>
   );

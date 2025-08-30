@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { formatPrice } from '../utils/chartUtils';
 
 interface ChartHeaderProps {
@@ -53,7 +53,7 @@ export const ChartHeader: React.FC<ChartHeaderProps> = ({
         )}
       </View>
       
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={onRefresh}
         style={{
           backgroundColor: '#333',
@@ -64,7 +64,7 @@ export const ChartHeader: React.FC<ChartHeaderProps> = ({
         <Text style={{ color: '#fff', fontSize: 12 }}>
           {loading ? 'Loading...' : 'Refresh'}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }; 

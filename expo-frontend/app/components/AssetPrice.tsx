@@ -1,15 +1,17 @@
 import { Ionicons } from '@expo/vector-icons'
 import React, { useEffect, useRef } from 'react'
-import { Animated, StyleSheet, View } from 'react-native'
+import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { ThemeColor } from '../theme/theme-color'
-import { WSTradeData } from '../types/live-price.types'
+import { Symbol, WSTradeData } from '../types/live-price.types'
 import ThemedText from './common/ThemedText'
 
 interface AssetPriceProps {
     priceData: WSTradeData | null
+    setSelectedAsset: (asset: Symbol) => void
+    isSelected?: boolean
 }
 
-const AssetPrice: React.FC<AssetPriceProps> = ({ priceData }) => {
+const AssetPrice: React.FC<AssetPriceProps> = ({ priceData, setSelectedAsset, isSelected = false }) => {
     const styles = assetPriceStyles
     const buyIconAnimation = useRef(new Animated.Value(1)).current
     const sellIconAnimation = useRef(new Animated.Value(1)).current
@@ -93,21 +95,36 @@ const AssetPrice: React.FC<AssetPriceProps> = ({ priceData }) => {
         }
     }, [priceData?.buyPrice, priceData?.sellPrice])
 
-    if (!priceData) return null;
+    // Always render the component, even if no price data
+    const isLoading = !priceData;
+
+    const handlePress = () => {
+        if (priceData) {
+            setSelectedAsset(priceData.symbol as Symbol);
+        }
+    };
 
     return (
-        <View key={priceData.symbol} style={styles.priceCard}>
+        <TouchableOpacity 
+            key={priceData?.symbol || 'loading'} 
+            style={[
+                styles.priceCard,
+                isSelected && styles.selectedCard
+            ]}
+            onPress={handlePress}
+            activeOpacity={0.7}
+        >
             <View style={styles.header}>
                 <ThemedText style={styles.symbolText} size='md'>
-                    {priceData.symbol.replace("USDT", "").toLocaleLowerCase()}
+                    {priceData?.symbol.replace("USDT", "").toLocaleLowerCase() || 'Loading...'}
                 </ThemedText>
             </View>
 
-            {priceData ? (
+            {!isLoading ? (
                 <View style={styles.priceInfo}>
                     <View style={styles.priceRow}>
                         <ThemedText style={styles.buyPrice} size='xs'>
-                            ${(Number(priceData.buyPrice) / 10000).toFixed(3)}
+                            ${(Number(priceData!.buyPrice) / 10000).toFixed(3)}
                         </ThemedText>
                         <Animated.View style={{ opacity: buyIconAnimation }}>
                             <Ionicons name="arrow-up" size={12} color={ThemeColor.success} />
@@ -116,7 +133,7 @@ const AssetPrice: React.FC<AssetPriceProps> = ({ priceData }) => {
 
                     <View style={styles.priceRow}>
                         <ThemedText style={styles.sellPrice} size='xs'>
-                            ${(Number(priceData.sellPrice) / 10000).toFixed(3)}
+                            ${(Number(priceData!.sellPrice) / 10000).toFixed(3)}
                         </ThemedText>
                         <Animated.View style={{ opacity: sellIconAnimation }}>
                             <Ionicons name="arrow-down" size={12} color={ThemeColor.error} />
@@ -124,23 +141,26 @@ const AssetPrice: React.FC<AssetPriceProps> = ({ priceData }) => {
                     </View>
                 </View>
             ) : (
-                <ThemedText style={styles.noData} size='sm'>No data available</ThemedText>
+                <View style={styles.loadingContainer}>
+                    <ThemedText style={styles.loadingText} size='xs'>Loading...</ThemedText>
+                </View>
             )}
-        </View>
+        </TouchableOpacity>
     )
 }
 
 const assetPriceStyles = StyleSheet.create({
     priceCard: {
-        backgroundColor: ThemeColor.background,
-        borderRadius: 12,
+        backgroundColor: ThemeColor.backgroundLight,
+        borderRadius: 24,
         borderWidth: 1,
         borderColor: ThemeColor.border,
-        maxHeight: 50,
+        maxHeight: 60,
         minWidth: 100,
         flexDirection: 'row',
         gap: 6,
         paddingHorizontal: 10,
+        paddingVertical: 4,
         alignItems: 'center'
     },
     header: {
@@ -176,6 +196,19 @@ const assetPriceStyles = StyleSheet.create({
         fontWeight: '500',
     },
     noData: {
+        color: ThemeColor.text.tertiary,
+        fontStyle: 'italic',
+    },
+    selectedCard: {
+        backgroundColor: ThemeColor.backgroundLight,
+        borderColor: ThemeColor.primary,
+        borderWidth: 2,
+    },
+    loadingContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
         color: ThemeColor.text.tertiary,
         fontStyle: 'italic',
     }
