@@ -7,15 +7,16 @@ import ThemedText from './common/ThemedText'
 interface TradeProps {
   data: WSTradeData | null
   selectedAsset: Symbol
+  onOpenModal: (type: 'buy' | 'sell') => void
 }
 
-const Trade: React.FC<TradeProps> = ({ selectedAsset, data }) => {
+const Trade: React.FC<TradeProps> = ({ selectedAsset, data, onOpenModal }) => {
   const handleBuyOrder = () => {
-    console.log('Buy order placed')
+    onOpenModal('buy')
   }
 
   const handleSellOrder = () => {
-    console.log('Sell order placed')
+    onOpenModal('sell')
   }
 
   return (
@@ -28,7 +29,7 @@ const Trade: React.FC<TradeProps> = ({ selectedAsset, data }) => {
           activeOpacity={0.8}
         >
           <ThemedText style={styles.buyButtonText} size='md'>
-            Buy {selectedAsset.replace("USDT", "")}
+            Buy {selectedAsset?.replace("USDT", "") || "Asset"}
           </ThemedText>
           {data?.buyPrice && <ThemedText size='sm' style={styles.priceButtonText}>{(Number(data.buyPrice) / 10000).toFixed(3)}</ThemedText>}
         </TouchableOpacity>
@@ -39,7 +40,7 @@ const Trade: React.FC<TradeProps> = ({ selectedAsset, data }) => {
           activeOpacity={0.8}
         >
           <ThemedText style={styles.sellButtonText} size='md'>
-            Sell {selectedAsset.replace("USDT", "")}
+            Sell {selectedAsset?.replace("USDT", "") || "Asset"}
           </ThemedText>
           {data?.sellPrice && <ThemedText size='sm' style={styles.priceButtonText}>{(Number(data.sellPrice) / 10000).toFixed(3)}</ThemedText>}
         </TouchableOpacity>
@@ -52,32 +53,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: ThemeColor.background,
   },
-  contentContainer: {
-    padding: 16,
-  },
-  titleText: {
-    color: ThemeColor.text.primary,
-    marginBottom: 24,
-    textAlign: 'center',
-  },
-  orderForm: {
-    backgroundColor: ThemeColor.backgroundLight,
-    borderRadius: 16,
-    padding: 20,
-    gap: 16,
-  },
-  formRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  labelText: {
-    color: ThemeColor.text.secondary,
-  },
-  valueText: {
-    color: ThemeColor.text.primary,
-    fontWeight: '500',
-  },
   buttonContainer: {
     flexDirection: 'row',
     padding: 16,
@@ -88,7 +63,7 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

@@ -1,7 +1,7 @@
 export const ThemeColor = {
     // Core colors
     primary: '#4ade80', // Subtle green for primary actions
-    background: '#0D0D0D', // Very dark background
+    background: '#1a1a1a', // Very dark background
     backgroundLight: '#1E1F25', // Light background
     card: '#1f1f1f', // Card/component background
     

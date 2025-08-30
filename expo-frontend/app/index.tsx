@@ -5,6 +5,7 @@ import CandlestickChart from './components/CandlestickChart';
 import LivePrice from './components/LivePrice';
 import OrderHistory from './components/OrderHistory';
 import Trade from './components/Trade';
+import TradingModal from './components/TradingModal';
 import { ThemeColor } from './theme/theme-color';
 import { Symbol, WSTradeData } from './types/live-price.types';
 
@@ -15,6 +16,10 @@ export default function Index() {
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
   const [selectedAsset, setSelectedAsset] = useState<Symbol>(Symbol.BTCUSDT);
   const [selectedAssetData, setSelectedAssetData] = useState<WSTradeData | null>(null);
+  
+  // Trading modal state
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
 
   useEffect(() => {
     setIsClient(true);
@@ -93,8 +98,17 @@ export default function Index() {
     const data = assets.find((asset) => asset.symbol == selectedAsset);
     if (data) 
       setSelectedAssetData(data)
-  }, [selectedAsset, assets])
-    ;
+  }, [selectedAsset, assets]);
+
+  // Trading modal handlers
+  const handleOpenModal = (type: 'buy' | 'sell') => {
+    setTradeType(type);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -105,8 +119,21 @@ export default function Index() {
       </View>
       <View style={styles.bottomContainer}>
         <OrderHistory />
-        <Trade selectedAsset={selectedAsset} data={selectedAssetData} />
+        <Trade 
+          selectedAsset={selectedAsset} 
+          data={selectedAssetData} 
+          onOpenModal={handleOpenModal}
+        />
       </View>
+
+      {/* Trading Modal - Rendered at top level */}
+      <TradingModal
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        selectedAsset={selectedAsset}
+        data={selectedAssetData}
+        tradeType={tradeType}
+      />
     </View>
   );
 }
