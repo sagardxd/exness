@@ -37,6 +37,7 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   
   // Candle sizing
   const candleWidth = 8;
+  const rightPadding = 60;
   const candleSpacing = 2;
   const totalCandleWidth = candleWidth + candleSpacing;
   
@@ -48,10 +49,17 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   
   // Calculate initial position to show the end of the chart
   const calculateInitialPosition = (dataLength: number) => {
-    const totalWidth = dataLength * totalCandleWidth;
-    const maxTranslate = Math.min(0, chartWidth - totalWidth);
-    return maxTranslate; // This will position the chart at the end
+    const totalWidth = dataLength * totalCandleWidth + rightPadding;
+  
+    // Case 1: chart is wider than screen → scrollable
+    if (totalWidth > chartWidth) {
+      return chartWidth - totalWidth; // align to the right end (latest candles)
+    }
+  
+    // Case 2: chart fits in screen → stick candles to the right
+    return chartWidth - (totalWidth);
   };
+  
 
   // Fetch data on component mount
   useEffect(() => {
@@ -99,33 +107,48 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   
   // Pan gesture for scrolling
   const panGesture = Gesture.Pan()
-    .onStart(() => {
-      translateX.value = translateX.value;
-    })
-    .onUpdate((event) => {
-      const totalWidth = data.length * totalCandleWidth;
-      const maxTranslate = Math.min(0, chartWidth - totalWidth);
-      
-      const sensitivity = 0.5;
-      const newTranslateX = translateX.value + (event.translationX * sensitivity);
-      
-      translateX.value = Math.max(maxTranslate, Math.min(0, newTranslateX));
-    })
-    .onEnd((event) => {
-      const totalWidth = data.length * totalCandleWidth;
-      const maxTranslate = Math.min(0, chartWidth - totalWidth);
-      
-      const momentum = event.velocityX * 0.005;
-      let targetX = translateX.value + momentum;
-      
-      targetX = Math.max(maxTranslate, Math.min(0, targetX));
-      
-      translateX.value = withSpring(targetX, {
-        damping: 20,
-        stiffness: 200,
-        velocity: event.velocityX * 0.005,
-      });
+  .onStart(() => {
+    // do nothing if chart is smaller than screen
+    const totalWidth = data.length * totalCandleWidth + rightPadding;
+    if (totalWidth <= chartWidth) return;
+  })
+  .onUpdate((event) => {
+    const totalWidth = data.length * totalCandleWidth + rightPadding;
+
+    if (totalWidth <= chartWidth) {
+      // lock candles to right side
+      translateX.value = chartWidth - totalWidth;
+      return;
+    }
+
+    const maxTranslate = Math.min(0, chartWidth - totalWidth);
+    const sensitivity = 0.5;
+    const newTranslateX = translateX.value + (event.translationX * sensitivity);
+
+    translateX.value = Math.max(maxTranslate, Math.min(0, newTranslateX));
+  })
+  .onEnd((event) => {
+    const totalWidth = data.length * totalCandleWidth + rightPadding;
+
+    if (totalWidth <= chartWidth) {
+      // lock candles to right side
+      translateX.value = chartWidth - totalWidth;
+      return;
+    }
+
+    const maxTranslate = Math.min(0, chartWidth - totalWidth);
+    const momentum = event.velocityX * 0.005;
+    let targetX = translateX.value + momentum;
+
+    targetX = Math.max(maxTranslate, Math.min(0, targetX));
+
+    translateX.value = withSpring(targetX, {
+      damping: 20,
+      stiffness: 200,
+      velocity: event.velocityX * 0.005,
     });
+  });
+
   
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
