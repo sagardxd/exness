@@ -1,4 +1,4 @@
-import { users } from "../store/in-memory.store.js";
+import { closedOrders, openOrders, users } from "../store/in-memory.store.js";
 import { UserSignupInput, UserSigninInput } from "../types/user.types.js";
 import { CustomError } from "../utils/error.js";
 import { generateToken } from "../utils/jwt.js";
@@ -29,6 +29,10 @@ export const userSignUpService = async (input: UserSignupInput) => {
 
     // Store user in memory
     users.set(userId, newUser);
+
+    // empty orders 
+    openOrders.set(userId, []);
+    closedOrders.set(userId, []);
 
     // Generate JWT token
     const token = generateToken({ id: userId, email: input.email });

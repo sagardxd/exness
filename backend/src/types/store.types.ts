@@ -49,3 +49,14 @@ export interface ClosedOrders {
     opened_at: Date
     closed_at: Date
 }
+
+export interface PriceUpdate {
+    symbol: string;
+    buyPrice: number;
+    sellPrice: number;
+    decimals: number;
+}
+
+export interface PriceUpdateMessage {
+    price_updates: PriceUpdate;
+}

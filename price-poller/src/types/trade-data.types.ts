@@ -14,9 +14,9 @@ export interface WSTradeData {
 }
 
 export enum Symbol {
-    BTCUSDT = "BTC",
-    ETHUSDT = "ETH",
-    SOLUSDT = "SOL"
+    BTC = "BTC",
+    ETH = "ETH",
+    SOL = "SOL"
 }
 
 export interface WSResponse {

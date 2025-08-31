@@ -1,5 +1,4 @@
 import { WebSocketServer } from "ws";
-import { createClient } from "redis";
 import { subscriber } from "./redis/redis-client.js";
 
 const wss = new WebSocketServer({ port: 8084 });

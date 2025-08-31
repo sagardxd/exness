@@ -28,7 +28,7 @@ await redisClient.connect();
 
 function parseWebSocketData(rawData: any): WSTradeData {
     return {
-        symbol: rawData.s,
+        symbol: rawData.s.replace("USDT", ""),
         buyPrice: rawData.m ? 0 : Math.floor(parseFloat(rawData.p) * SCALE_FACTOR),
         sellPrice: rawData.m ? Math.floor(parseFloat(rawData.p) * SCALE_FACTOR) : 0,
         decimals: DECIMAL_PLACES
