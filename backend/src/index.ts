@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import candleRouter from './routes/candle.route.js'
+import userRouter from './routes/user.route.js'    
 import TradesDB from './db/time-scale-db.js';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -14,8 +15,8 @@ const timescaleDbURL = process.env.TIMESCALE_DB_URL || ""
 export const db = new TradesDB(timescaleDbURL);
 
 app.use(express.json());
+app.use("/user", userRouter)
 app.use("/candles", candleRouter)
-// app.use("/user", userRouter)
 
 
 app.listen(PORT, () => {

@@ -128,6 +128,7 @@ const CandleChart: React.FC<CandleChartProps> = ({ symbol, interval }) => {
     useEffect(() => {
         if (candleSeriesRef.current && candleData.length > 0) {
             try {
+                console.log('candle data is ', candleData)
                 candleSeriesRef.current.setData(candleData);
                 console.log('Successfully set chart data:', candleData);
             } catch (error) {
