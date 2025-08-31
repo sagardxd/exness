@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight:50
   },
   buyButton: {
     backgroundColor: ThemeColor.success,

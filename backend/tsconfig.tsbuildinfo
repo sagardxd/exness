@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/controllers/candle.controller.ts","./src/controllers/user.controller.ts","./src/db/time-scale-db.ts","./src/routes/candle.route.ts","./src/routes/user.route.ts","./src/services/candle.service.ts","./src/services/user.service.ts","./src/types/time-scale.types.ts"],"version":"5.9.2"}

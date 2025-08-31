@@ -16,7 +16,7 @@ export default function Index() {
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
   const [selectedAsset, setSelectedAsset] = useState<Symbol>(Symbol.BTCUSDT);
   const [selectedAssetData, setSelectedAssetData] = useState<WSTradeData | null>(null);
-  
+
   // Trading modal state
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
@@ -26,77 +26,77 @@ export default function Index() {
     setSelectedAsset(Symbol.BTCUSDT)
   }, []);
 
-  useEffect(() => {
-    if (!isClient) return;
+  // useEffect(() => {
+  //   if (!isClient) return;
 
-    let socket: WebSocket | null = null;
+  //   let socket: WebSocket | null = null;
 
-    try {
-      // Use the same IP as your API service
-      socket = new WebSocket("ws://192.168.1.158:8084");
-      console.log('Attempting WebSocket connection...');
+  //   try {
+  //     // Use the same IP as your API service
+  //     socket = new WebSocket("ws://192.168.1.158:8084");
+  //     console.log('Attempting WebSocket connection...');
 
-      socket.onopen = () => {
-        console.log('Connected to WebSocket backend');
-        setConnectionStatus('connected');
-      }
+  //     socket.onopen = () => {
+  //       console.log('Connected to WebSocket backend');
+  //       setConnectionStatus('connected');
+  //     }
 
-      socket.onmessage = (event) => {
+  //     socket.onmessage = (event) => {
 
-        const response = JSON.parse(event.data)
+  //       const response = JSON.parse(event.data)
 
-        // Extract the trade data from the response
-        const newTradeData: WSTradeData = response.price_updates;
+  //       // Extract the trade data from the response
+  //       const newTradeData: WSTradeData = response.price_updates;
 
-        // Validate the data before updating
-        if (newTradeData && newTradeData.symbol) {
-          setAssets(prevAssets => {
-            // Filter out any undefined items from previous state
-            const validPrevAssets = prevAssets.filter(item => item && item.symbol);
+  //       // Validate the data before updating
+  //       if (newTradeData && newTradeData.symbol) {
+  //         setAssets(prevAssets => {
+  //           // Filter out any undefined items from previous state
+  //           const validPrevAssets = prevAssets.filter(item => item && item.symbol);
 
-            const existingIndex = validPrevAssets.findIndex(
-              trade => trade.symbol === newTradeData.symbol
-            );
+  //           const existingIndex = validPrevAssets.findIndex(
+  //             trade => trade.symbol === newTradeData.symbol
+  //           );
 
-            if (existingIndex !== -1) {
-              // Update existing asset
-              const updatedAssets = [...validPrevAssets];
-              updatedAssets[existingIndex] = newTradeData;
-              return updatedAssets;
-            } else {
-              // Add new asset
-              return [...validPrevAssets, newTradeData];
-            }
-          });
-        }
-      }
-      socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        setConnectionStatus('error');
-      }
+  //           if (existingIndex !== -1) {
+  //             // Update existing asset
+  //             const updatedAssets = [...validPrevAssets];
+  //             updatedAssets[existingIndex] = newTradeData;
+  //             return updatedAssets;
+  //           } else {
+  //             // Add new asset
+  //             return [...validPrevAssets, newTradeData];
+  //           }
+  //         });
+  //       }
+  //     }
+  //     socket.onerror = (error) => {
+  //       console.error('WebSocket error:', error);
+  //       setConnectionStatus('error');
+  //     }
 
-      socket.onclose = (event) => {
-        console.log('WebSocket connection closed:', event.code, event.reason);
-        setConnectionStatus('disconnected');
-      }
+  //     socket.onclose = (event) => {
+  //       console.log('WebSocket connection closed:', event.code, event.reason);
+  //       setConnectionStatus('disconnected');
+  //     }
 
-    } catch (error) {
-      console.error('Error creating WebSocket:', error);
-      setConnectionStatus('error');
-    }
+  //   } catch (error) {
+  //     console.error('Error creating WebSocket:', error);
+  //     setConnectionStatus('error');
+  //   }
 
-    // Cleanup function
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
-  }, [isClient]);
+  //   // Cleanup function
+  //   return () => {
+  //     if (socket) {
+  //       socket.close();
+  //     }
+  //   };
+  // }, [isClient]);
 
   useEffect(() => {
     if (!assets) return;
     const data = assets.find((asset) => asset.symbol == selectedAsset);
-    if (data) 
+    if (data)
       setSelectedAssetData(data)
   }, [selectedAsset, assets]);
 
@@ -113,15 +113,17 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <SafeAreaView />
-      <View>
+      <View style={styles.topSection}>
         <LivePrice data={assets} setSelectedAsset={setSelectedAsset} selectedAsset={selectedAsset} />
         <CandlestickChart symbol={selectedAsset} interval="1m" />
       </View>
-      <View style={styles.bottomContainer}>
+      <View style={styles.middleSection}>
         <OrderHistory />
-        <Trade 
-          selectedAsset={selectedAsset} 
-          data={selectedAssetData} 
+      </View>
+      <View style={styles.bottomContainer}>
+        <Trade
+          selectedAsset={selectedAsset}
+          data={selectedAssetData}
           onOpenModal={handleOpenModal}
         />
       </View>
@@ -143,8 +145,17 @@ const homeStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: ThemeColor.background
   },
-  bottomContainer: {
+  topSection: {
+    flex: 0,
+  },
+  middleSection: {
     flex: 1,
-    justifyContent: 'space-between'
+    marginBottom: 80
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   }
 })

@@ -1,22 +1,70 @@
 import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { ThemeColor } from '../theme/theme-color'
+import { Order, OrderStatus } from '../types/order.types'
 import ThemedText from './common/ThemedText'
-
-type OrderStatus = 'open' | 'close' | 'pending'
+import OrderItem from './OrderItem'
 
 const OrderHistory = () => {
     const [selectedStatus, setSelectedStatus] = useState<OrderStatus>('open')
 
+    // Separate arrays for open and closed orders
+    const [openOrders] = useState<Order[]>([
+        { 
+            id: '1', 
+            symbol: 'BTCUSDT', 
+            type: 'buy', 
+            volume: 0.08, 
+            openPrice: 108770.16, 
+            status: 'open' 
+        },
+        { 
+            id: '2', 
+            symbol: 'ETHUSDT', 
+            type: 'sell', 
+            volume: 2.0, 
+            openPrice: 2800, 
+            status: 'open' 
+        },
+    ])
+
+    const [closedOrders] = useState<Order[]>([
+        { 
+            id: '3', 
+            symbol: 'BTCUSDT', 
+            type: 'buy', 
+            volume: 0.04, 
+            openPrice: 108718.61, 
+            status: 'close',
+            timestamp: 'Aug 30, 8:22 PM'
+        },
+        { 
+            id: '4', 
+            symbol: 'SOLUSDT', 
+            type: 'sell', 
+            volume: 10, 
+            openPrice: 95, 
+            status: 'close',
+            timestamp: 'Aug 29, 3:15 PM'
+        },
+    ])
+
     const statusOptions: { key: OrderStatus; label: string }[] = [
         { key: 'open', label: 'Open' },
-        { key: 'close', label: 'Close' },
-        { key: 'pending', label: 'Pending' }
+        { key: 'close', label: 'Close' }
     ]
 
     const handleStatusSelect = (status: OrderStatus) => {
         setSelectedStatus(status)
     }
+
+    const handleCloseOrder = (orderId: string) => {
+        console.log('Closing order:', orderId)
+    }
+
+    // Get orders based on selected status
+    const filteredOrders = selectedStatus === 'open' ? openOrders : closedOrders
 
     return (
         <View style={styles.container}>
@@ -38,20 +86,27 @@ const OrderHistory = () => {
                             ]}
                             size='sm'
                         >
-                            {option.label}
+                            {option.label} ({option.key === 'open' ? openOrders.length : closedOrders.length})
                         </ThemedText>
                     </TouchableOpacity>
                 ))}
             </View>
 
-            <View style={styles.contentContainer}>
-                <ThemedText style={styles.statusText} size='md'>
-                    Showing {selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)} Orders
-                </ThemedText>
-                <ThemedText style={styles.descriptionText} size='sm'>
-                    This is where the {selectedStatus} orders will be displayed
-                </ThemedText>
-            </View>
+            <ScrollView contentContainerStyle={styles.contentContainer} >
+                {filteredOrders.length > 0 ? (
+                    filteredOrders.map((order) => (
+                        <OrderItem 
+                            key={order.id} 
+                            order={order} 
+                            onCloseOrder={selectedStatus === 'open' ? handleCloseOrder : undefined}
+                        />
+                    ))
+                ) : (
+                    <ThemedText style={styles.descriptionText} size='sm'>
+                        There are no {selectedStatus} orders 
+                    </ThemedText>
+                )}
+            </ScrollView>
         </View>
     )
 }
@@ -59,6 +114,7 @@ const OrderHistory = () => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: ThemeColor.background,
+        flex: 1,
     },
     tabsContainer: {
         flexDirection: 'row',
@@ -93,13 +149,9 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         padding: 16,
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexGrow: 1,
     },
-    statusText: {
-        color: 'white',
-        marginBottom: 8,
-    },
+
     descriptionText: {
         color: ThemeColor.text.secondary,
         textAlign: 'center',

@@ -51,7 +51,7 @@ const TradingModal: React.FC<TradingModalProps> = ({
     <BottomSheet
       ref={bottomSheetRef}
       index={0}
-      snapPoints={snapPoints}
+      snapPoints={snapPoints} 
       enablePanDownToClose={true}
       onClose={onClose}
       backgroundStyle={styles.background}
