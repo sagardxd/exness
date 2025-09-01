@@ -20,9 +20,9 @@ export const db = new TradesDB(timescaleDbURL);
 
 // Start asset streaming
 await startAssetStreaming();
-app.use("/user", userRouter)
-app.use("/candles", candleRouter)
-app.use("/trade", authMiddleware, tradesRouter)
+app.use("/api/v1/user", userRouter)
+app.use("/api/v1/candles", candleRouter)
+app.use("/api/v1/trade", authMiddleware, tradesRouter)
 
 
 app.listen(PORT, () => {

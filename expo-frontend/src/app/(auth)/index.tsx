@@ -1,14 +1,17 @@
+import { useAuth } from '@/src/context/AuthContext'
 import React, { useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import ThemedText from '../../components/common/ThemedText'
 import { ThemeColor } from '../../theme/theme-color'
 
 const AuthScreen = () => {
+    const {login} = useAuth();      
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const handleSubmit = () => {
+        login({email})
         if (isLogin) {
             console.log('Signing in with:', email, password)
         } else {

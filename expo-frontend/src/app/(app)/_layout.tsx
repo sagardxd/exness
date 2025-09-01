@@ -1,11 +1,11 @@
 import { Redirect, Stack } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 
-const AuthLayout = () => {
+const AppLayout = () => {
     const { user } = useAuth();
 
-    if (user) {
-        return <Redirect href={'/(app)'}/>
+    if (!user) {
+        return <Redirect href={'/(auth)'}/>
     }
 
     return (
@@ -15,4 +15,4 @@ const AuthLayout = () => {
     )
 }
 
-export default AuthLayout;  
+export default AppLayout;  
