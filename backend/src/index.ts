@@ -13,14 +13,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors())
+app.use(express.json());
 
 const timescaleDbURL = process.env.TIMESCALE_DB_URL || ""
 export const db = new TradesDB(timescaleDbURL);
 
 // Start asset streaming
 await startAssetStreaming();
-
-app.use(express.json());
 app.use("/user", userRouter)
 app.use("/candles", candleRouter)
 app.use("/trade", authMiddleware, tradesRouter)

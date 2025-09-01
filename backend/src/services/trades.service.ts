@@ -8,6 +8,7 @@ import { generateId } from "../utils/uuid.js";
 import { createOrderSchema } from "../zod/order.schema.js"
 
 export const createTrade = async (input: OrderRequest, userId: string) => {
+    console.log('here')
     try {
         createOrderSchema.parse(input);
 
@@ -63,13 +64,12 @@ export const createTrade = async (input: OrderRequest, userId: string) => {
         }
 
     } catch (error: any) {
-        if (error instanceof CustomError) throw Error
+        if (error instanceof CustomError) throw error
 
         if (error.name === "ZodError") {
             throw new CustomError(400, "Invalid input data");
         }
-
-        throw new CustomError(500, "Internal Server Error")
+        throw new CustomError(500, error.message || "Internal server error")
     }
 }
 
@@ -141,8 +141,8 @@ export const closeTrade = async (orderId: string, userId: string) => {
         };
 
     } catch (error: any) {
-        if (error instanceof CustomError) throw error;
-        throw new CustomError(500, "Failed to close trade");
+        if (error instanceof CustomError) throw error
+        throw new CustomError(500, error.message || "Internal server error")
     }
 }
 

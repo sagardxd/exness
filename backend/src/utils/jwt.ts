@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { UserJwtPayload, UserSignupInput } from "../types/user.types.js";
+import { UserJwtPayload } from "../types/user.types.js";
 
 const SECRET = "sagardxd"; 
 

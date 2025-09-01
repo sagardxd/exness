@@ -20,6 +20,7 @@ export const userSignUpService = async (input: UserSignupInput) => {
     }
 
     const userId = generateId();
+    console.log('userId', userId)
     const newUser = {
       id: userId,
       email: input.email,

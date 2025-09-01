@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as TradeService from '../services/trades.service.js'
 
 export const createTrade = async (req: Request, res: Response) => {
+    console.log('came here')
     try {
         const userId = req.user?.id;
         if (!userId) return res.status(401).json("Unautorized")
@@ -36,6 +37,8 @@ export const getOpenTrades = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id;
         if (!userId) return res.status(401).json("Unautorized")
+
+            console.log('came here')
 
         const response = await TradeService.getOpenTrade(userId);
         return res.status(201).json(response)

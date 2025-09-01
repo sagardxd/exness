@@ -83,8 +83,6 @@ export async function startAssetStreaming() {
         // Store price & check liquidations
         latestAssetPrices.set(assetData.symbol, assetData);
         checkLiquidations(assetData);
-        
-        console.log(`📊 ${assetData.symbol}: ${assetData.buyPrice}/${assetData.sellPrice}`);
     });
     
     console.log("🚀 Streaming started");
