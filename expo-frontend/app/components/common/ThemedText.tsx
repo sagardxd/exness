@@ -1,3 +1,4 @@
+import { ThemeColor } from "@/app/theme/theme-color";
 import React from "react";
 import { StyleSheet, Text, TextProps, TextStyle } from "react-native";
 
@@ -14,7 +15,7 @@ const ThemedText: React.FC<ThemedTextProps> = ({
     ...rest
 }) => {
     return (
-        <Text style={[themedTextStyles[size], style]} {...rest}>
+        <Text style={[themedTextStyles[size], style, { color: ThemeColor.text.primary }]} {...rest}>
             {children}
         </Text>
     );

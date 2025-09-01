@@ -14,7 +14,7 @@ export default function Index() {
   const [assets, setAssets] = useState<WSTradeData[]>([]);
   const [isClient, setIsClient] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
-  const [selectedAsset, setSelectedAsset] = useState<Symbol>(Symbol.BTCUSDT);
+  const [selectedAsset, setSelectedAsset] = useState<Symbol>(Symbol.BTC);
   const [selectedAssetData, setSelectedAssetData] = useState<WSTradeData | null>(null);
 
   // Trading modal state
@@ -23,75 +23,75 @@ export default function Index() {
 
   useEffect(() => {
     setIsClient(true);
-    setSelectedAsset(Symbol.BTCUSDT)
+    setSelectedAsset(Symbol.BTC)
   }, []);
 
-  // useEffect(() => {
-  //   if (!isClient) return;
+  useEffect(() => {
+    if (!isClient) return;
 
-  //   let socket: WebSocket | null = null;
+    let socket: WebSocket | null = null;
 
-  //   try {
-  //     // Use the same IP as your API service
-  //     socket = new WebSocket("ws://192.168.1.158:8084");
-  //     console.log('Attempting WebSocket connection...');
+    try {
+      // Use the same IP as your API service
+      socket = new WebSocket("ws://192.168.1.158:8084");
+      console.log('Attempting WebSocket connection...');
 
-  //     socket.onopen = () => {
-  //       console.log('Connected to WebSocket backend');
-  //       setConnectionStatus('connected');
-  //     }
+      socket.onopen = () => {
+        console.log('Connected to WebSocket backend');
+        setConnectionStatus('connected');
+      }
 
-  //     socket.onmessage = (event) => {
+      socket.onmessage = (event) => {
 
-  //       const response = JSON.parse(event.data)
+        const response = JSON.parse(event.data)
 
-  //       // Extract the trade data from the response
-  //       const newTradeData: WSTradeData = response.price_updates;
+        // Extract the trade data from the response
+        const newTradeData: WSTradeData = response.price_updates;
 
-  //       // Validate the data before updating
-  //       if (newTradeData && newTradeData.symbol) {
-  //         setAssets(prevAssets => {
-  //           // Filter out any undefined items from previous state
-  //           const validPrevAssets = prevAssets.filter(item => item && item.symbol);
+        // Validate the data before updating
+        if (newTradeData && newTradeData.symbol) {
+          setAssets(prevAssets => {
+            // Filter out any undefined items from previous state
+            const validPrevAssets = prevAssets.filter(item => item && item.symbol);
 
-  //           const existingIndex = validPrevAssets.findIndex(
-  //             trade => trade.symbol === newTradeData.symbol
-  //           );
+            const existingIndex = validPrevAssets.findIndex(
+              trade => trade.symbol === newTradeData.symbol
+            );
 
-  //           if (existingIndex !== -1) {
-  //             // Update existing asset
-  //             const updatedAssets = [...validPrevAssets];
-  //             updatedAssets[existingIndex] = newTradeData;
-  //             return updatedAssets;
-  //           } else {
-  //             // Add new asset
-  //             return [...validPrevAssets, newTradeData];
-  //           }
-  //         });
-  //       }
-  //     }
-  //     socket.onerror = (error) => {
-  //       console.error('WebSocket error:', error);
-  //       setConnectionStatus('error');
-  //     }
+            if (existingIndex !== -1) {
+              // Update existing asset
+              const updatedAssets = [...validPrevAssets];
+              updatedAssets[existingIndex] = newTradeData;
+              return updatedAssets;
+            } else {
+              // Add new asset
+              return [...validPrevAssets, newTradeData];
+            }
+          });
+        }
+      }
+      socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        setConnectionStatus('error');
+      }
 
-  //     socket.onclose = (event) => {
-  //       console.log('WebSocket connection closed:', event.code, event.reason);
-  //       setConnectionStatus('disconnected');
-  //     }
+      socket.onclose = (event) => {
+        console.log('WebSocket connection closed:', event.code, event.reason);
+        setConnectionStatus('disconnected');
+      }
 
-  //   } catch (error) {
-  //     console.error('Error creating WebSocket:', error);
-  //     setConnectionStatus('error');
-  //   }
+    } catch (error) {
+      console.error('Error creating WebSocket:', error);
+      setConnectionStatus('error');
+    }
 
-  //   // Cleanup function
-  //   return () => {
-  //     if (socket) {
-  //       socket.close();
-  //     }
-  //   };
-  // }, [isClient]);
+    // Cleanup function
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [isClient]);
 
   useEffect(() => {
     if (!assets) return;

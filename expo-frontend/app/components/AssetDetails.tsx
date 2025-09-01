@@ -3,13 +3,14 @@ import { StyleSheet, View } from 'react-native'
 import { Symbol } from '../types/live-price.types'
 import ThemedText from './common/ThemedText'
 
-interface AssetSelectorProps {
+interface AssetDetailsProps {
   asset: Symbol
   assetPrice: string
-  amount: string
+  margin: string
+  leverage: number
 }
 
-const AssetSelector: React.FC<AssetSelectorProps> = ({ asset, amount, assetPrice = null }) => {
+const AssetDetails: React.FC<AssetDetailsProps> = ({ asset, margin, leverage, assetPrice = null }) => {
   return (
     <View style={styles.container}>
       <View style={styles.selector}>
@@ -19,7 +20,9 @@ const AssetSelector: React.FC<AssetSelectorProps> = ({ asset, amount, assetPrice
           </View>
           <ThemedText style={styles.name}>{asset.replace("USDT", "")}</ThemedText>
         </View>
-        {assetPrice && amount && <ThemedText style={styles.amountValue}>{(Number(amount)/parseFloat(assetPrice)).toFixed(8)}</ThemedText>}
+        {assetPrice && margin ? <ThemedText style={styles.amountValue}>{((Number(margin) * leverage)/parseFloat(assetPrice)).toFixed(8)}</ThemedText> :
+        <ThemedText style={styles.amountValue}>0</ThemedText>
+        }
       </View>
     </View>
   )
@@ -70,4 +73,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AssetSelector 
+export default AssetDetails 

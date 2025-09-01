@@ -115,8 +115,8 @@ const AssetPrice: React.FC<AssetPriceProps> = ({ priceData, setSelectedAsset, is
             activeOpacity={0.7}
         >
             <View style={styles.header}>
-                <ThemedText style={styles.symbolText} size='md'>
-                    {priceData?.symbol.replace("USDT", "").toLocaleLowerCase() || 'Loading...'}
+                <ThemedText style={styles.symbolText} size='sm'>
+                    {priceData?.symbol || 'Loading...'}
                 </ThemedText>
             </View>
 
@@ -170,6 +170,7 @@ const assetPriceStyles = StyleSheet.create({
     },
     symbolText: {
         color: ThemeColor.text.primary,
+        fontWeight: '700',
     },
     priceInfo: {
         gap: 2,

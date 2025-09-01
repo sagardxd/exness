@@ -10,7 +10,7 @@ interface LivePriceProps {
 }
 
 const LivePrice: React.FC<LivePriceProps> = ({ data, setSelectedAsset, selectedAsset }) => {
-    const symbols = ["BTCUSDT", "SOLUSDT", "ETHUSDT"];
+    const symbols = ["BTC", "SOL", "ETH"];
 
     const getPriceForSymbol = (symbol: string): WSTradeData | null => {
         if (!data || !Array.isArray(data)) return null;

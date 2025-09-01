@@ -3,9 +3,10 @@ import React, { useMemo, useRef, useState } from 'react'
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { ThemeColor } from '../theme/theme-color'
 import { Symbol, WSTradeData } from '../types/live-price.types'
-import AssetSelector from './AssetSelector'
+import AssetDetails from './AssetDetails'
 import LeverageControls from './LeverageControls'
 import LeverageSlider from './LeverageSlider'
+import ThemedText from './common/ThemedText'
 
 interface TradingModalProps {
   isVisible: boolean
@@ -22,7 +23,7 @@ const TradingModal: React.FC<TradingModalProps> = ({
   data,
   tradeType,
 }) => {
-  const [volume, setVolume] = useState('')
+  const [margin, setMargin] = useState('')
   const [leverage, setLeverage] = useState(40.2)
   const bottomSheetRef = useRef<BottomSheet>(null)
 
@@ -45,7 +46,7 @@ const TradingModal: React.FC<TradingModalProps> = ({
     : 'N/A'
 
   // Check if button should be disabled
-  const isButtonDisabled = !volume || Number(volume) <= 0
+  const isButtonDisabled = !margin || Number(margin) <= 0
 
   return (
     <BottomSheet
@@ -72,11 +73,12 @@ const TradingModal: React.FC<TradingModalProps> = ({
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>You're paying</Text>
-              <AssetSelector 
+              <Text style={styles.sectionTitle}>Asset Details</Text>
+              <AssetDetails
                 asset={selectedAsset} 
                 assetPrice={currentPrice}
-                amount={volume} 
+                margin={margin}
+                leverage={leverage} 
               />
             </View>
 
@@ -86,12 +88,14 @@ const TradingModal: React.FC<TradingModalProps> = ({
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Margin</Text>
+              <ThemedText size='md' style={styles.sectionTitle}>Margin
+                <ThemedText size='sm' style={styles.sectionTitle}> (in $)</ThemedText>
+              </ThemedText>
               <TextInput
                 style={styles.input}
-                value={volume}
-                onChangeText={setVolume}
-                placeholder="Enter volume"
+                value={margin}
+                onChangeText={setMargin}
+                placeholder="Enter margin"
                 keyboardType="decimal-pad"
                 placeholderTextColor="#666"
               />
@@ -163,8 +167,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
     color: '#ccc',
     marginBottom: 8,
   },

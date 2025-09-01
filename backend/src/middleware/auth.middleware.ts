@@ -2,7 +2,6 @@ import {Request, Response, NextFunction} from 'express'
 import { verifyToken } from '../utils/jwt.js';
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    console.log("authMiddleware")
     try {
         const authHeader = req.headers.authorization
 
@@ -16,7 +15,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         }
         const decodedUser = verifyToken(token);
 
-        console.log(decodedUser)
         req.user = {
             id: decodedUser.id,
             email: decodedUser.email

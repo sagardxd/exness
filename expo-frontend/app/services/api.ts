@@ -2,7 +2,7 @@ import { CandleData } from '../types/candlestick';
 
 // API call to fetch candlestick data
 export const fetchCandleData = async (
-  symbol: string = 'ETHUSDT', 
+  symbol: string = 'ETH', 
   interval: string = '1m'
 ): Promise<CandleData[]> => {
   try {
