@@ -5,11 +5,10 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-g
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withSpring
 } from 'react-native-reanimated';
 
 import { ChartGrid } from '@/src/components/ChartGrid';
-import { ChartHeader } from '@/src/components/ChartHeader';
 import { LoadingSpinner } from '@/src/components/LoadingSpinner';
 import { PriceLabels } from '@/src/components/PriceLabels';
 import { fetchCandleData } from '@/src/services/api';
@@ -28,10 +27,10 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   const translateX = useSharedValue(0);
   
   // Chart dimensions
-  const chartWidth = width - 60;
-  const chartHeight = height - 80;
-  const chartLeft = 10;
-  const chartTop = 30;
+  const chartWidth = width - 80;
+  const chartHeight = height - 40;
+  const chartLeft = 10; // Center the chart horizontally
+  const chartTop = 20; // Center the chart vertically with even spacing
   
   // Candle sizing
   const candleWidth = 8;
@@ -177,7 +176,27 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   
   // Show loading state
   if (loading) {
-    return <LoadingSpinner message="Loading chart data..." />;
+    return (
+      <View style={{ 
+        width, 
+        height, 
+        backgroundColor: '#111',
+        position: 'relative',
+      }}>
+        {/* Loading Chart Area - Same dimensions as actual chart */}
+        <View style={{
+          position: 'absolute',
+          left: chartLeft,
+          top: chartTop,
+          width: chartWidth,
+          height: chartHeight,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <LoadingSpinner />
+        </View>
+      </View>
+    );
   }
 
 
@@ -188,13 +207,15 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
         height, 
         backgroundColor: '#111',
         position: 'relative',
+        paddingTop: 20, // Add top padding
+        paddingBottom: 20, // Add bottom padding
       }}>
-        <ChartHeader
+        {/* <ChartHeader
           symbol={symbol}
           currentPrice={data[data.length - 1]?.close || 0}
           error={error}
           loading={loading}
-        />
+        /> */}
         
         <PriceLabels
           priceRange={memoizedPriceRange}

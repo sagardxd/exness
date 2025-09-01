@@ -24,12 +24,13 @@ export const PriceLabels: React.FC<PriceLabelsProps> = ({
         key={i}
         style={{
           position: 'absolute',
-          right: 5,
+          right: 10,
           top: y - 8,
           backgroundColor: '#333',
           paddingHorizontal: 4,
           paddingVertical: 1,
           borderRadius: 2,
+          zIndex: 1000
         }}
       >
         <Text style={{ color: '#fff', fontSize: 10 }}>

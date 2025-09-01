@@ -1,4 +1,3 @@
-import { formatPrice } from '@/src/utils/chartUtils';
 import React from 'react';
 import { Text, View } from 'react-native';
 
@@ -34,12 +33,12 @@ export const ChartHeader: React.FC<ChartHeaderProps> = ({
         }}>
           {symbol}
         </Text>
-        <Text style={{
+        {/* <Text style={{
           color: '#10B981',
           fontSize: 12,
         }}>
           ${formatPrice(currentPrice)}
-        </Text>
+        </Text> */}
         {error && (
           <Text style={{
             color: '#EF4444',

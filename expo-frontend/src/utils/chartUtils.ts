@@ -1,6 +1,13 @@
 import { CandleData } from '../types/candlestick';
 
-export const formatPrice = (price: number): string => price.toFixed(2);
+export const formatPrice = (price: number): string => {
+  // Handle large numbers like 12345678 -> 1234.5678
+  if (price >= 10000) {
+    return (price / 10000).toFixed(4);
+  }
+  // Handle smaller numbers with 4 decimal places
+  return price.toFixed(4);
+};
 
 export const calculatePriceRange = (data: CandleData[]) => {
   const allPrices = data.flatMap(d => [d.open, d.high, d.low, d.close]);
