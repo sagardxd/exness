@@ -5,17 +5,36 @@ import { StyleSheet, Text, TextProps, TextStyle } from "react-native";
 interface ThemedTextProps extends TextProps {
     children: React.ReactNode;
     size?: "xxl" | "xl" | "lg" | "md" | "sm" | "xs" | "body" | "button";
+    variant?: "primary" | "secondary" | "tertiary" | "success" | "error";
     style?: TextStyle | TextStyle[];
 }
 
 const ThemedText: React.FC<ThemedTextProps> = ({
     children,
     size = "md",
+    variant = "primary",
     style,
     ...rest
 }) => {
+    const getColor = () => {
+        switch (variant) {
+            case "primary":
+                return ThemeColor.text.primary;
+            case "secondary":
+                return ThemeColor.text.secondary;
+            case "tertiary":
+                return ThemeColor.text.tertiary;
+            case "success":
+                return ThemeColor.success;
+            case "error":
+                return ThemeColor.error;
+            default:
+                return ThemeColor.text.primary;
+        }
+    };
+
     return (
-        <Text style={[themedTextStyles[size], style, { color: ThemeColor.text.primary }]} {...rest}>
+        <Text style={[themedTextStyles[size], { color: getColor() }, style]} {...rest}>
             {children}
         </Text>
     );

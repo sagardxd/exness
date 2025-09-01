@@ -1,6 +1,6 @@
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
 import React, { useMemo, useRef, useState } from 'react'
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { ThemeColor } from '../theme/theme-color'
 import { Symbol, WSTradeData } from '../types/live-price.types'
 import AssetDetails from './AssetDetails'
@@ -67,13 +67,13 @@ const TradingModal: React.FC<TradingModalProps> = ({
         >
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.header}>
-              <Text style={styles.title}>
+              <ThemedText size="lg" style={styles.title}>
                 {tradeType === 'buy' ? 'Long/Buy' : 'Short/Sell'} {selectedAsset?.replace("USDT", "")}
-              </Text>
+              </ThemedText>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Asset Details</Text>
+              <ThemedText variant="secondary" style={styles.sectionTitle}>Asset Details</ThemedText>
               <AssetDetails
                 asset={selectedAsset} 
                 assetPrice={currentPrice}
@@ -83,13 +83,13 @@ const TradingModal: React.FC<TradingModalProps> = ({
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Current Price</Text>
-              <Text style={styles.price}>${currentPrice}</Text>
+              <ThemedText variant="secondary" style={styles.sectionTitle}>Current Price</ThemedText>
+              <ThemedText size="xl" variant="success">${currentPrice}</ThemedText>
             </View>
 
             <View style={styles.section}>
-              <ThemedText size='md' style={styles.sectionTitle}>Margin
-                <ThemedText size='sm' style={styles.sectionTitle}> (in $)</ThemedText>
+              <ThemedText variant="secondary" style={styles.sectionTitle}>
+                Margin <ThemedText size="sm" variant="tertiary">(in $)</ThemedText>
               </ThemedText>
               <TextInput
                 style={styles.input}
@@ -97,12 +97,12 @@ const TradingModal: React.FC<TradingModalProps> = ({
                 onChangeText={setMargin}
                 placeholder="Enter margin"
                 keyboardType="decimal-pad"
-                placeholderTextColor="#666"
+                placeholderTextColor={ThemeColor.text.tertiary}
               />
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Leverage</Text>
+              <ThemedText variant="secondary" style={styles.sectionTitle}>Leverage</ThemedText>
               <LeverageControls 
                 value={leverage}
                 onIncrement={handleLeverageIncrement}
@@ -120,7 +120,7 @@ const TradingModal: React.FC<TradingModalProps> = ({
                   styles.actionButton, 
                   { 
                     backgroundColor: isButtonDisabled 
-                      ? '#666' 
+                      ? ThemeColor.text.tertiary
                       : tradeType === 'buy' 
                         ? ThemeColor.success 
                         : ThemeColor.error 
@@ -128,9 +128,9 @@ const TradingModal: React.FC<TradingModalProps> = ({
                 ]}
                 disabled={isButtonDisabled}
               >
-                <Text style={styles.actionButtonText}>
+                <ThemedText size="button" style={styles.actionButtonText}>
                   {tradeType === 'buy' ? 'Long/Buy' : 'Short/Sell'} {selectedAsset?.replace("USDT", "")}
-                </Text>
+                </ThemedText>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -159,37 +159,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
+    textAlign: 'center',
   },
   section: {
     marginBottom: 10,
   },
   sectionTitle: {
-    color: '#ccc',
     marginBottom: 8,
-  },
-  price: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4CAF50',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#444',
+    borderColor: ThemeColor.border,
     borderRadius: 8,
     padding: 12,
-    backgroundColor: '#2a2a2a',
-    color: '#fff',
-    fontSize: 16,
+    backgroundColor: ThemeColor.backgroundLight,
+    color: ThemeColor.text.primary,
   },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   checkboxLabel: {
-    color: '#fff',
+    color: ThemeColor.text.primary,
     fontSize: 16,
     marginLeft: 12,
   },
@@ -200,9 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   actionButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: ThemeColor.text.primary,
   },
 })
 
