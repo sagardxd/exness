@@ -4,38 +4,39 @@ import { Asset, OrderType, ClosedOrders } from "../types/store.types.js";
 import { openOrders, closedOrders, latestAssetPrices } from "../store/in-memory.store.js";
 
 const redisURL = process.env.REDIS_URL || '';
-export const subscriber = createClient({url: redisURL});
+export const subscriber = createClient({ url: redisURL });
+let isSubscriberConnected = false;
 
 subscriber.on("error", (err) => console.log("Redis Client Error", err));
 
 // Simple liquidation check
 function checkLiquidations(assetData: WSTradeData) {
     const { symbol, buyPrice, sellPrice, decimals } = assetData;
-    
+
     // Check all open orders
     for (const [userId, orders] of openOrders.entries()) {
         if (!orders || orders.length === 0) continue;
-        
+
         // Check each order for this asset
         for (let i = orders.length - 1; i >= 0; i--) {
             const order = orders[i];
             if (!order || order.asset !== symbol) continue;
-            
+
             const currentPrice = order.type === OrderType.BUY ? sellPrice : buyPrice;
-            const shouldLiquidate = order.type === OrderType.BUY 
-                ? currentPrice <= order.liquation_price 
+            const shouldLiquidate = order.type === OrderType.BUY
+                ? currentPrice <= order.liquation_price
                 : currentPrice >= order.liquation_price;
-            
+
             if (shouldLiquidate) {
                 console.log(`LIQUIDATED: ${order.order_id} on ${symbol}`);
-                
+
                 // Calculate PnL
                 const openPrice = order.open_price / Math.pow(10, decimals);
                 const closePrice = currentPrice / Math.pow(10, decimals);
-                const pnl = order.type === OrderType.BUY 
+                const pnl = order.type === OrderType.BUY
                     ? (closePrice - openPrice) * order.quantity
                     : (openPrice - closePrice) * order.quantity;
-                
+
                 // Move to closed orders
                 const closedOrder: ClosedOrders = {
                     order_id: order.order_id,
@@ -49,13 +50,13 @@ function checkLiquidations(assetData: WSTradeData) {
                     opened_at: order.created_at,
                     closed_at: new Date()
                 };
-                
+
                 // Remove from open, add to closed
                 orders.splice(i, 1);
                 const userClosed = closedOrders.get(userId) || [];
                 userClosed.push(closedOrder);
                 closedOrders.set(userId, userClosed);
-                
+
                 console.log(`PnL: $${pnl.toFixed(2)}`);
             }
         }
@@ -72,18 +73,27 @@ export function getAllAssetPrices(): Map<string, WSTradeData> {
     return latestAssetPrices;
 }
 
-// Start streaming prices
 export async function startAssetStreaming() {
-    await subscriber.connect();
-    
-    await subscriber.subscribe("ASSETS", (message: string) => {
-        const data: WSResponse = JSON.parse(message);
-        const assetData = data.price_updates;
-        
-        // Store price & check liquidations
-        latestAssetPrices.set(assetData.symbol, assetData);
-        checkLiquidations(assetData);
-    });
-    
-    console.log("🚀 Streaming started");
+    if (isSubscriberConnected) {
+        console.log("Redis subscriber already connected, skipping...");
+        return;
+    }
+
+    try {
+        await subscriber.connect();
+        isSubscriberConnected = true;
+
+        await subscriber.subscribe("ASSETS", (message: string) => {
+            const data: WSResponse = JSON.parse(message);
+            const assetData = data.price_updates;
+
+            latestAssetPrices.set(assetData.symbol, assetData);
+            checkLiquidations(assetData);
+        });
+
+        console.log("🚀 Streaming started");
+    } catch (err) {
+        isSubscriberConnected = false; // reset if failed
+        console.error("Failed to connect Redis subscriber:", err);
+    }
 }

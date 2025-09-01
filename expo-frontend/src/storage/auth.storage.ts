@@ -19,3 +19,10 @@ export const getToken = async() => {
     }
 }
 
+export const removeToken = async() => {
+    try {
+        await AsyncStorage.removeItem(JWT_Token);
+    } catch (error) {
+        logger("removeToken", "error removing the jwt in async storage", error)
+    }
+}

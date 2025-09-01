@@ -105,3 +105,18 @@ export const userBalanceService = async (userId: string) => {
     throw new CustomError(500, "Internal server error");
   }
 }
+
+export const userMeService = async (userId: string) => {
+  try {
+    const user = users.get(userId);
+    if (!user) {
+      throw new CustomError(404, "User not found");
+    }
+    return { email: user.email };
+  } catch (error: any) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, "Internal server error");
+  }
+} 

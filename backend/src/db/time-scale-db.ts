@@ -3,33 +3,23 @@ import type { Candle } from '../types/time-scale.types.ts';
 const { Client } = pkg;
 
 class TradesDB {
-    private client: typeof Client.prototype;
-    private connected: boolean;
+    private connectionString: string;
 
-    constructor(private connectionString: string) {
-        this.client = new Client({ connectionString });
-        this.connected = false;
+    constructor(connectionString: string) {
+        this.connectionString = connectionString;
     }
 
-    // Connect once
-    private async connect(): Promise<void> {
-        if (!this.connected) {
-            try {
-                await this.client.connect();
-                this.connected = true;
-                console.log('✅ Connected to DB');
-            } catch (err) {
-                console.error('❌ DB connection failed:', err);
-                throw err;
-            }
-        }
+    // Create a new client for each operation
+    private createClient(): typeof Client.prototype {
+        return new Client({ connectionString: this.connectionString });
     }
 
     // Get candles from materialized views
     async getCandles(token: string, interval: string, limit = 100): Promise<Candle[]> {
-        await this.connect();
+        const client = this.createClient();
         try {
-            const result = await this.client.query<Candle>(
+            await client.connect();
+            const result = await client.query<Candle>(
                 `SELECT * FROM candles_${interval} WHERE token = $1 ORDER BY candle_start DESC LIMIT $2`,
                 [token, limit]
             );
@@ -39,21 +29,14 @@ class TradesDB {
         } catch (err) {
             console.error('❌ Failed to get candles:', err);
             throw err;
+        } finally {
+            await client.end();
         }
     }
 
-    // Close connection
+    // Method kept for backwards compatibility
     async close(): Promise<void> {
-        if (this.connected) {
-            try {
-                await this.client.end();
-                this.connected = false;
-                console.log('✅ DB connection closed');
-            } catch (err) {
-                console.error('❌ Failed to close DB connection:', err);
-                throw err;
-            }
-        }
+        // No-op as clients are now managed per operation
     }
 }
 

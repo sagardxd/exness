@@ -22,7 +22,7 @@ const AuthScreen = () => {
         try {
             const result = await signInUser(email, password, isLogin)
             if (result.token) {
-                login({email})
+                login({email}, result.token)
                 console.log('Success:', isLogin ? 'Signed in' : 'Signed up')
             }
         } catch (error) {
