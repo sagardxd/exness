@@ -43,6 +43,7 @@ export const userSignUpService = async (input: UserSignupInput) => {
 
     return { token };
   } catch (error: any) {
+    console.log('error', error)
     if (error instanceof CustomError) {
       throw error;
     }

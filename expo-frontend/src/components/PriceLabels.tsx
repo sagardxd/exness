@@ -14,7 +14,7 @@ export const PriceLabels: React.FC<PriceLabelsProps> = ({
   chartHeight,
 }) => {
   const labels = [];
-  
+
   for (let i = 0; i <= 4; i++) {
     const price = priceRange.min + (priceRange.max - priceRange.min) * (1 - i / 4);
     const y = chartTop + (chartHeight / 4) * i;

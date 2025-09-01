@@ -28,27 +28,6 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle token expiration
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      console.log('Token expired, redirecting to auth');
-    }
-    return Promise.reject(error);
-  }
-);
-
-// Function to manually set token (useful for immediate use after login)
-export const setAuthToken = (token: string) => {
-  api.defaults.headers.common.Authorization = `Bearer ${token}`;
-};
-
-// Function to remove token (useful for logout)
-export const removeAuthToken = () => {
-  delete api.defaults.headers.common.Authorization;
-};
-
 const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
   const response: AxiosResponse<T> = await api.get(url, config);
   return response.data;
@@ -69,8 +48,6 @@ const apiCaller = {
   get,
   post,
   put,
-  setAuthToken,
-  removeAuthToken,
 };
 
 export default apiCaller;

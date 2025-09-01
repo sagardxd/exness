@@ -7,7 +7,6 @@ interface ChartHeaderProps {
   currentPrice: number;
   error?: string | null;
   loading?: boolean;
-  onRefresh: () => void;
 }
 
 export const ChartHeader: React.FC<ChartHeaderProps> = ({
@@ -15,7 +14,6 @@ export const ChartHeader: React.FC<ChartHeaderProps> = ({
   currentPrice,
   error,
   loading = false,
-  onRefresh,
 }) => {
   return (
     <View style={{
@@ -52,19 +50,6 @@ export const ChartHeader: React.FC<ChartHeaderProps> = ({
           </Text>
         )}
       </View>
-      
-      {/* <TouchableOpacity
-        onPress={onRefresh}
-        style={{
-          backgroundColor: '#333',
-          padding: 8,
-          borderRadius: 4,
-        }}
-      >
-        <Text style={{ color: '#fff', fontSize: 12 }}>
-          {loading ? 'Loading...' : 'Refresh'}
-        </Text>
-      </TouchableOpacity> */}
     </View>
   );
 }; 

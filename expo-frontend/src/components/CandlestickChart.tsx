@@ -10,15 +10,14 @@ import Animated, {
 
 import { ChartGrid } from '@/src/components/ChartGrid';
 import { ChartHeader } from '@/src/components/ChartHeader';
-import { ErrorState } from '@/src/components/ErrorState';
 import { LoadingSpinner } from '@/src/components/LoadingSpinner';
 import { PriceLabels } from '@/src/components/PriceLabels';
-import { fetchCandleData, generateCandleData } from '@/src/services/api';
+import { fetchCandleData } from '@/src/services/api';
 import { CandleData, CandlestickChartProps } from '@/src/types/candlestick';
 import { calculatePriceRange, priceToY } from '@/src/utils/chartUtils';
 
 export const CandlestickChart: React.FC<CandlestickChartProps> = ({
-  symbol = 'SOLUSDT',
+  symbol = 'BTC',
   interval = '1m',
   width = Dimensions.get('window').width,
   height = 400,
@@ -45,6 +44,14 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
     if (data.length === 0) return { min: 0, max: 100 };
     return calculatePriceRange(data);
   }, [data]);
+  
+  // Memoize the actual min/max values to prevent unnecessary re-renders
+  const memoizedPriceRange = useMemo(() => {
+    return {
+      min: priceRange.min,
+      max: priceRange.max
+    };
+  }, [priceRange.min, priceRange.max]);
   
   // Calculate initial position to show the end of the chart
   const calculateInitialPosition = (dataLength: number) => {
@@ -80,25 +87,6 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
     loadData();
   }, [symbol, interval]);
   
-  // Refresh data function
-  const refreshData = async () => {
-    setLoading(true);
-    setError(null);
-    const apiData = await fetchCandleData(symbol, interval);
-    if (apiData.length > 0) {
-      setData(apiData);
-      // Maintain position at the end after refresh
-      const initialPosition = calculateInitialPosition(apiData.length);
-      translateX.value = initialPosition;
-    } else {
-      setError('Failed to fetch data from API');
-      const demoData = generateCandleData(50);
-      setData(demoData);
-      const initialPosition = calculateInitialPosition(demoData.length);
-      translateX.value = initialPosition;
-    }
-    setLoading(false);
-  };
   
   // Pan gesture for scrolling
   const panGesture = Gesture.Pan()
@@ -192,16 +180,6 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
     return <LoadingSpinner message="Loading chart data..." />;
   }
 
-  // Show error state if no data
-  if (data.length === 0) {
-    return (
-      <ErrorState 
-        message="No data available" 
-        onRetry={refreshData}
-        retryText="Retry"
-      />
-    );
-  }
 
   return (
     <GestureHandlerRootView style={{ }}>
@@ -216,11 +194,10 @@ export const CandlestickChart: React.FC<CandlestickChartProps> = ({
           currentPrice={data[data.length - 1]?.close || 0}
           error={error}
           loading={loading}
-          onRefresh={refreshData}
         />
         
         <PriceLabels
-          priceRange={priceRange}
+          priceRange={memoizedPriceRange}
           chartTop={chartTop}
           chartHeight={chartHeight}
         />

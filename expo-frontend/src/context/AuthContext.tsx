@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>({email: 'sagardxd5@gmail.com'});
 
 
     const login = (user: User) => {

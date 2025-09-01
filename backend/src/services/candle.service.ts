@@ -25,6 +25,7 @@ export const getCandleService = async (token: string, interval: string) => {
             data: finalData
         }
     } catch (error) {
+        console.log(error)
         return {
             success: false,
             data: null

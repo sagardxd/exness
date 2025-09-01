@@ -7,7 +7,7 @@ interface AuthResponse {
 
 export const signInUser = async(email: string, password: string, isSignIn: boolean) => {
     try {
-        const data: AuthResponse = await apiCaller.post<AuthResponse>(`/user/${isSignIn ? "signin" : "singup"}`, {
+        const data: AuthResponse = await apiCaller.post<AuthResponse>(`/user/${isSignIn ? "signin" : "signup"}`, {
             email,
             password
         })

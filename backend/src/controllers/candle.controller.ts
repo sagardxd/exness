@@ -12,7 +12,7 @@ export const getCandleController = async (req: Request, res: Response) => {
     
             const data = await getCandleService(token, interval);
     
-            res.json({ success: true, data: data });
+            return res.json(data);
         } catch (err) {
             console.error("Error fetching candles:", err);
             res.status(500).json({ success: false, error: "Internal server error" });

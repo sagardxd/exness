@@ -1,18 +1,28 @@
 import { CandleData } from '@/src/types/candlestick';
+import apiCaller from './api.service';
+
+interface CandleResponse {
+    success: boolean;
+    data: Array<{
+      time: string;
+      open: string;
+      high: string;
+      low: string;
+      close: string;
+    }>;
+}
 
 // API call to fetch candlestick data
 export const fetchCandleData = async (
-  symbol: string = 'ETH', 
+  symbol: string = 'BTC', 
   interval: string = '1m'
 ): Promise<CandleData[]> => {
   try {
-    // Use your computer's IP address instead of localhost for mobile testing
-    const response = await fetch(`http://192.168.1.158:8003/candles/${symbol}?interval=${interval}`);
-    const result = await response.json();
+    const result = await apiCaller.get<CandleResponse>(`/candles/${symbol}?interval=${interval}`);
     
-    if (result.success && result.data.success) {
-      return result.data.data.map((candle: any) => ({
-        timestamp: candle.time,
+    if (result.success) {
+      return result.data.map((candle) => ({
+        timestamp: parseInt(candle.time),
         open: parseFloat(candle.open),
         high: parseFloat(candle.high),
         low: parseFloat(candle.low),
@@ -25,28 +35,3 @@ export const fetchCandleData = async (
     return [];
   }
 };
-
-// Fallback demo data generator
-export const generateCandleData = (count: number): CandleData[] => {
-  const data: CandleData[] = [];
-  let basePrice = 1000;
-  
-  for (let i = 0; i < count; i++) {
-    const open = basePrice + (Math.random() - 0.5) * 2;
-    const high = open + Math.random() * 3;
-    const low = open - Math.random() * 3;
-    const close = low + Math.random() * (high - low);
-    
-    data.push({
-      timestamp: Date.now() + i * 60000,
-      open: parseFloat(open.toFixed(2)),
-      high: parseFloat(high.toFixed(2)),
-      low: parseFloat(low.toFixed(2)),
-      close: parseFloat(close.toFixed(2)),
-    });
-    
-    basePrice = close;
-  }
-  
-  return data;
-}; 
