@@ -88,3 +88,18 @@ export const userSignInService = async (credentials: UserSigninInput) => {
     throw new CustomError(500, "Internal server error");
   }
 };   
+
+export const userBalanceService = async (userId: string) => {
+  try {
+    const balance = balances.get(userId);
+    if (!balance) {
+      throw new CustomError(404, "User balance not found");
+    }
+    return { usd_balance: balance.usd_balance };
+  } catch (error: any) {
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new CustomError(500, "Internal server error");
+  }
+}
