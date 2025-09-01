@@ -1,9 +1,10 @@
 export interface TradeData {
     s: string; // symbol
-    p: string; // price 
+    p: number; // price 
     T: string; // timestamp 
     m: boolean // true == sell, false == buy
     q: string // quantity
+    decimals: number // decimal places for the price
 }
 
 export interface WSTradeData {

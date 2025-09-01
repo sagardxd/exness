@@ -27,7 +27,7 @@ function checkLiquidations(assetData: WSTradeData) {
                 : currentPrice >= order.liquation_price;
             
             if (shouldLiquidate) {
-                console.log(`🔥 LIQUIDATED: ${order.order_id} on ${symbol}`);
+                console.log(`LIQUIDATED: ${order.order_id} on ${symbol}`);
                 
                 // Calculate PnL
                 const openPrice = order.open_price / Math.pow(10, decimals);

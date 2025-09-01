@@ -33,17 +33,18 @@ class TradesDB {
                 token: t.s,
                 price: parseFloat(t.p),
                 timestamp: new Date(t.T),
-                volume: parseFloat(t.q)
+                volume: parseFloat(t.q),
+                decimals: t.decimals
             }));
 
             const values = trades
-                .map((_, i) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`)
+                .map((_, i) => `($${i * 5 + 1}, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, $${i * 5 + 5})`)
                 .join(', ');
 
-            const params = trades.flatMap(t => [t.token, t.price, t.timestamp, t.volume]);
+            const params = trades.flatMap(t => [t.token, t.price, t.timestamp, t.volume, t.decimals]);
 
             await this.client.query(
-                `INSERT INTO trades (token, price, timestamp, volume) VALUES ${values}`,
+                `INSERT INTO trades (token, price, timestamp, volume, decimals) VALUES ${values}`,
                 params
             );
 

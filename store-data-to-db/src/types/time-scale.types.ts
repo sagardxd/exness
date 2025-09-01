@@ -3,7 +3,8 @@ export interface TradeData {
     p: string; // price as string
     T: string; // timestamp in ms
     m: boolean; // true == sell, false == buy
-    q: string // quantity
+    q: string // quantity   
+    decimals: number
 }
 
 export interface Trade {
@@ -11,6 +12,7 @@ export interface Trade {
     price: number;
     timestamp: Date;
     volume: number;
+    decimals: number;
 }
 export interface Candle {
     token: string;

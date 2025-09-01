@@ -10,8 +10,7 @@ dotenv.config();
 
 // Constants
 const DECIMAL_PLACES = 4;
-const SCALE_FACTOR = 10000;
-const BATCH_SIZE = 30;
+const DECIMAL_FACTOR = 10000;
 
 // Environment variables
 const binanceWSURL = process.env.BINANCE_WS_URL || "";
@@ -20,7 +19,6 @@ const redisURL = process.env.REDIS_URL || "";
 // Global state
 const redisClient = createClient({ url: redisURL });
 const wsCache: Record<string, WSTradeData> = {};
-let messageCounter = 0;
 
 // Setup Redis connection
 redisClient.on("error", (err) => console.error("Redis Client Error", err));
@@ -29,8 +27,8 @@ await redisClient.connect();
 function parseWebSocketData(rawData: any): WSTradeData {
     return {
         symbol: rawData.s.replace("USDT", ""),
-        buyPrice: rawData.m ? 0 : Math.floor(parseFloat(rawData.p) * SCALE_FACTOR),
-        sellPrice: rawData.m ? Math.floor(parseFloat(rawData.p) * SCALE_FACTOR) : 0,
+        buyPrice: rawData.m ? 0 : Math.floor(parseFloat(rawData.p) * DECIMAL_FACTOR),
+        sellPrice: rawData.m ? Math.floor(parseFloat(rawData.p) * DECIMAL_FACTOR) : 0,
         decimals: DECIMAL_PLACES
     };
 }
@@ -96,11 +94,12 @@ async function publishPriceUpdate(symbol: string) {
 
 function createTradeData(rawData: any): TradeData {
     return {
-        s: rawData.s,
-        p: rawData.p,
+        s: rawData.s.replace("USDT", ""),
+        p: Math.floor(parseFloat(rawData.p) * DECIMAL_FACTOR),
         T: rawData.T,
         m: rawData.m,
-        q: rawData.q
+        q: rawData.q,
+        decimals: DECIMAL_PLACES
     };
 }
 
@@ -119,7 +118,7 @@ async function handleWebSocketMessage(message: WebSocket.Data) {
 
         // Create trade data for queue
         const tradeData = createTradeData(parsed);
-        // await produceQueue(tradeData, redisClient);
+        await produceQueue(tradeData, redisClient);
     } catch (error) {
         logger("handleWebSocketMessage", "Error processing message from Binance WS", error);
     }

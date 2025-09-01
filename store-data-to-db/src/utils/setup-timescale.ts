@@ -17,8 +17,9 @@ async function setupTimescale() {
       CREATE TABLE IF NOT EXISTS trades (
         id BIGSERIAL,
         token VARCHAR(20) NOT NULL,
-        price DECIMAL(20,8) NOT NULL,
+        price BIGINT NOT NULL,
         volume DECIMAL(20,8) NOT NULL,
+        decimals INT NOT NULL,
         timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         PRIMARY KEY (timestamp, token, id)
       );
