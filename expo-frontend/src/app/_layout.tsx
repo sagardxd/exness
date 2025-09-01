@@ -1,5 +1,6 @@
+import { AuthProvider } from '@/src/context/AuthContext';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -22,10 +23,12 @@ export default function RootLayout() {
   if (!loaded && !error) {
     return null;
   }
-  
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </GestureHandlerRootView>
+    <AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Slot />
+      </GestureHandlerRootView>
+    </AuthProvider>
   );
 }

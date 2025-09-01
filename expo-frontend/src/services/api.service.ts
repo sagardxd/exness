@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { getToken } from '../storage/auth.storage';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -8,6 +9,45 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Add request interceptor to automatically include JWT token
+api.interceptors.request.use(
+  async (config) => {
+    try {
+      const token = await getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error('Error getting token for request:', error);
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor to handle token expiration
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      console.log('Token expired, redirecting to auth');
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Function to manually set token (useful for immediate use after login)
+export const setAuthToken = (token: string) => {
+  api.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
+
+// Function to remove token (useful for logout)
+export const removeAuthToken = () => {
+  delete api.defaults.headers.common.Authorization;
+};
 
 const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
   const response: AxiosResponse<T> = await api.get(url, config);
@@ -29,6 +69,8 @@ const apiCaller = {
   get,
   post,
   put,
+  setAuthToken,
+  removeAuthToken,
 };
 
 export default apiCaller;

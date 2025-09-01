@@ -48,7 +48,7 @@ const themedTextStyles = StyleSheet.create({
     sm: { fontSize: 14, fontFamily: "ManropeRegular" },
     xs: { fontSize: 10, fontFamily: "ManropeRegular" },
     body: { fontSize: 16, fontFamily: "ManropeRegular", color: "#333" },
-    button: { fontSize: 16, fontFamily: "ManropeSemiBold", textTransform: "uppercase" },
+    button: { fontSize: 16, fontFamily: "ManropeSemiBold" },
 });
 
 export default ThemedText;
