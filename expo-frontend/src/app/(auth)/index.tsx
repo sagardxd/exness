@@ -1,21 +1,35 @@
+import ThemedText from '@/src/components/common/ThemedText'
 import { useAuth } from '@/src/context/AuthContext'
+import { signInUser } from '@/src/services/auth.service'
+import { ThemeColor } from '@/src/theme/theme-color'
 import React, { useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import ThemedText from '../../components/common/ThemedText'
-import { ThemeColor } from '../../theme/theme-color'
 
 const AuthScreen = () => {
     const {login} = useAuth();      
     const [isLogin, setIsLogin] = useState(true)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
 
-    const handleSubmit = () => {
-        login({email})
-        if (isLogin) {
-            console.log('Signing in with:', email, password)
-        } else {
-            console.log('Signing up with:', email, password)
+    const handleSubmit = async () => {
+        if (!email || !password) {
+            console.log('Please fill in all fields')
+            return
+        }
+
+        setLoading(true)
+        try {
+            const result = await signInUser(email, password, isLogin)
+            if (result.token) {
+                login({email})
+                console.log('Success:', isLogin ? 'Signed in' : 'Signed up')
+            }
+        } catch (error) {
+            
+            console.log('Error:', error instanceof Error ? error.message : 'Something went wrong')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -45,9 +59,13 @@ const AuthScreen = () => {
                     secureTextEntry
                 />
                 
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <TouchableOpacity 
+                    style={[styles.submitButton, loading && styles.submitButtonDisabled]} 
+                    onPress={handleSubmit}
+                    disabled={loading}
+                >
                     <ThemedText size="button" style={styles.submitButtonText}>
-                        Submit
+                        {loading ? 'Loading...' : 'Submit'}
                     </ThemedText>
                 </TouchableOpacity>
             </View>
@@ -100,6 +118,9 @@ const styles = StyleSheet.create({
     },
     toggleButton: {
         alignItems: 'center',
+    },
+    submitButtonDisabled: {
+        opacity: 0.7,
     },
 })
 
