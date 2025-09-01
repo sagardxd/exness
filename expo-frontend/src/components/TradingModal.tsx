@@ -1,12 +1,12 @@
+import AssetDetails from '@/src/components/AssetDetails'
+import LeverageSlider from '@/src/components/LeverageSlider'
+import ThemedText from '@/src/components/common/ThemedText'
+import { ThemeColor } from '@/src/theme/theme-color'
+import { Symbol, WSTradeData } from '@/src/types/live-price.types'
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet'
 import React, { useMemo, useRef, useState } from 'react'
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { ThemeColor } from '../theme/theme-color'
-import { Symbol, WSTradeData } from '../types/live-price.types'
-import AssetDetails from './AssetDetails'
 import LeverageControls from './LeverageControls'
-import LeverageSlider from './LeverageSlider'
-import ThemedText from './common/ThemedText'
 
 interface TradingModalProps {
   isVisible: boolean

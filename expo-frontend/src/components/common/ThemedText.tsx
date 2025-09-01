@@ -1,4 +1,4 @@
-import { ThemeColor } from "@/app/theme/theme-color";
+import { ThemeColor } from "@/src/theme/theme-color";
 import React from "react";
 import { StyleSheet, Text, TextProps, TextStyle } from "react-native";
 

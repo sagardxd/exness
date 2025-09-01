@@ -8,14 +8,14 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { fetchCandleData, generateCandleData } from '../services/api';
-import { CandleData, CandlestickChartProps } from '../types/candlestick';
-import { calculatePriceRange, priceToY } from '../utils/chartUtils';
-import { ChartGrid } from './ChartGrid';
-import { ChartHeader } from './ChartHeader';
-import { ErrorState } from './ErrorState';
-import { LoadingSpinner } from './LoadingSpinner';
-import { PriceLabels } from './PriceLabels';
+import { ChartGrid } from '@/src/components/ChartGrid';
+import { ChartHeader } from '@/src/components/ChartHeader';
+import { ErrorState } from '@/src/components/ErrorState';
+import { LoadingSpinner } from '@/src/components/LoadingSpinner';
+import { PriceLabels } from '@/src/components/PriceLabels';
+import { fetchCandleData, generateCandleData } from '@/src/services/api';
+import { CandleData, CandlestickChartProps } from '@/src/types/candlestick';
+import { calculatePriceRange, priceToY } from '@/src/utils/chartUtils';
 
 export const CandlestickChart: React.FC<CandlestickChartProps> = ({
   symbol = 'SOLUSDT',

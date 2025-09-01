@@ -1,8 +1,8 @@
+import ThemedText from '@/src/components/common/ThemedText'
+import { ThemeColor } from '@/src/theme/theme-color'
+import { Symbol, WSTradeData } from '@/src/types/live-price.types'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { ThemeColor } from '../theme/theme-color'
-import { Symbol, WSTradeData } from '../types/live-price.types'
-import ThemedText from './common/ThemedText'
 
 interface TradeProps {
   data: WSTradeData | null

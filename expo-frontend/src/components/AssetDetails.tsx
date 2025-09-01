@@ -1,7 +1,7 @@
+import ThemedText from '@/src/components/common/ThemedText'
+import { Symbol } from '@/src/types/live-price.types'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Symbol } from '../types/live-price.types'
-import ThemedText from './common/ThemedText'
 
 interface AssetDetailsProps {
   asset: Symbol

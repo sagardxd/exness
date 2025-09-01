@@ -1,8 +1,8 @@
+import ThemedText from '@/src/components/common/ThemedText'
+import { ThemeColor } from '@/src/theme/theme-color'
+import { Order } from '@/src/types/order.types'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { ThemeColor } from '../theme/theme-color'
-import { Order } from '../types/order.types'
-import ThemedText from './common/ThemedText'
 
 interface OrderItemProps {
   order: Order

@@ -1,13 +1,13 @@
+import CandlestickChart from '@/src/components/CandlestickChart';
+import LivePrice from '@/src/components/LivePrice';
+import OrderHistory from '@/src/components/OrderHistory';
+import Trade from '@/src/components/Trade';
+import TradingModal from '@/src/components/TradingModal';
+import { ThemeColor } from '@/src/theme/theme-color';
+import { Symbol, WSTradeData } from '@/src/types/live-price.types';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CandlestickChart from './components/CandlestickChart';
-import LivePrice from './components/LivePrice';
-import OrderHistory from './components/OrderHistory';
-import Trade from './components/Trade';
-import TradingModal from './components/TradingModal';
-import { ThemeColor } from './theme/theme-color';
-import { Symbol, WSTradeData } from './types/live-price.types';
 
 export default function Index() {
   const styles = homeStyles;

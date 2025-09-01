@@ -1,7 +1,7 @@
+import { ThemeColor } from '@/src/theme/theme-color';
 import Slider from '@react-native-community/slider';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ThemeColor } from '../theme/theme-color';
 
 interface LeverageSliderProps {
     value: number

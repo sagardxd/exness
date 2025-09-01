@@ -1,6 +1,6 @@
+import { formatPrice } from '@/src/utils/chartUtils';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { formatPrice } from '../utils/chartUtils';
 
 interface PriceLabelsProps {
   priceRange: { min: number; max: number };

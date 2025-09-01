@@ -1,10 +1,10 @@
+import ThemedText from '@/src/components/common/ThemedText'
+import OrderItem from '@/src/components/OrderItem'
+import { ThemeColor } from '@/src/theme/theme-color'
+import { Order, OrderStatus } from '@/src/types/order.types'
 import React, { useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { ThemeColor } from '../theme/theme-color'
-import { Order, OrderStatus } from '../types/order.types'
-import ThemedText from './common/ThemedText'
-import OrderItem from './OrderItem'
 
 const OrderHistory = () => {
     const [selectedStatus, setSelectedStatus] = useState<OrderStatus>('open')

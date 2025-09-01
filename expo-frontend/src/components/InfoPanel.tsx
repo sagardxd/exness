@@ -1,7 +1,7 @@
+import { CandleData } from '@/src/types/candlestick';
+import { formatPrice } from '@/src/utils/chartUtils';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { CandleData } from '../types/candlestick';
-import { formatPrice } from '../utils/chartUtils';
 
 interface InfoPanelProps {
   data: CandleData[];

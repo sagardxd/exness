@@ -1,7 +1,7 @@
+import AssetPrice from '@/src/components/AssetPrice';
+import { Symbol, WSTradeData } from '@/src/types/live-price.types';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Symbol, WSTradeData } from '../types/live-price.types';
-import AssetPrice from './AssetPrice';
 
 interface LivePriceProps {
     data: WSTradeData[] | null

@@ -1,4 +1,4 @@
-import { CandleData } from '../types/candlestick';
+import { CandleData } from '@/src/types/candlestick';
 
 // API call to fetch candlestick data
 export const fetchCandleData = async (
